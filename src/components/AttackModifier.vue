@@ -16,7 +16,7 @@
                     tag="div">
 
                     <img
-                        v-for="(card, i) in drawnCards"
+                        v-for="card in drawnCards"
                         :key="card.name"
                         :src="require(`@/assets/gloomhaven/images/${card.image}`)">
 
@@ -25,7 +25,7 @@
         </div>
 
         <attack-modifier-deck></attack-modifier-deck>
-
+        test
         <div class="bless-curse">
             <div class="bless">
                 <counter
