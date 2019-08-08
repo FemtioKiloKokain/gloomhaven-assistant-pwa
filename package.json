@@ -1,7 +1,8 @@
 {
   "name": "gloomhaven-assistant-pwa",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage": "http://femtiokilokokain.github.io/gloomhaven-assistant-pwa",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
