@@ -1,6 +1,6 @@
 module.exports = {
     publicPath: 'gloomhaven-assistant-pwa',
-    outputDir: 'dist',
+    outputDir: 'docs',
     chainWebpack: config => {
         // clear the existing images module
         const imagesRule = config.module.rule("images");
