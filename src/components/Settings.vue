@@ -22,7 +22,7 @@
 
 <script>
 import deck from '@/components/Settings/Deck'
-import profile from '@/components/Settings/Profile'
+// import profile from '@/components/Settings/Profile'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faUser, faUsers } from '@fortawesome/free-solid-svg-icons'

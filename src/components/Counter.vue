@@ -10,7 +10,8 @@
                 @click="$store.commit(decrement)">
 
                 <span>
-                    <icon icon="minus" />
+                    -
+                    <!-- <icon icon="minus" /> -->
                 </span>
             </div>
             <div class="amount">
@@ -26,7 +27,8 @@
                 @click="$store.commit(increment)">
 
                 <span>
-                    <icon icon="plus" />
+                    +
+                    <!-- <icon icon="plus" /> -->
                 </span>
             </div>
         </div>
@@ -75,7 +77,7 @@ export default {
         color: var(--color);
     }
     .counter-wrapper {
-        padding-top: 0.5em;
+        margin: 0 0.25em;
         
         > span {
             font-size: 0.75em;
@@ -86,11 +88,12 @@ export default {
     }
 
     .counter {
+        padding-top: 0.5em;
         display: flex;
         flex-flow: row wrap;
-        font-size: 1.1em;
+        font-size: 1em;
         align-items: center;
-        margin-top: 0.5em;
+        font-family: 'Pirata One', 'Grenze', Helvetica, Arial, sans-serif;
 
         .amount {
             height: 2em;
@@ -99,18 +102,20 @@ export default {
             border-radius: 50%;
             box-shadow: 
                 0 0 0px 2px rgba(0,0,0,1),
-                inset 0 0 20px rgba(0,0,0,.1);
+                // inset 0 0 20px rgba(0,0,0,.1),
+                inset 0 1.5px 0 1px rgba(0,0,0,.15),
+                inset 0 -6px 0 1px #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             background: #fff;
             position: relative;
             z-index: 3;
-            font-weight: 600;
             overflow: hidden;
 
             span {
                 font-size: 1.2em;
+                text-shadow: 1px 1px rgba(255,255,255,.8);
                 // transform: translateY(-0.13em);
             }
         }
@@ -128,21 +133,42 @@ export default {
         padding: 0.5em;
         position: relative;
         z-index: 2;
+        overflow: hidden;
+
+        // &::before {
+        //     content: '';
+        //     display: block;
+        //     position: absolute;
+        //     top: 0;
+        //     left: 0;
+        //     right: 0;
+        //     bottom: 0;
+        //     background: url('../assets/gloomhaven/images/personal-goals/pg-back.png');
+        //     background-size: 150% auto;
+        //     background-position: center 70%;
+        //     mix-blend-mode: multiply;
+        //     opacity: 0.25;
+        // }
         
         span {
-            font-size: 0.75em;
+            color: transparent;
+            transform: translateY(-0.05em);
+            font-size: 1.75em;
+            text-shadow: 0 0 0 #fff, -1px -1px rgba(0,0,0,0.2);
         }
 
         &.decrement {
             border-radius: 0.95em 0 0 0.95em;
             justify-content: flex-start;
             margin-right: -0.75em;
+            box-shadow: inset 1px 1px 0 1px rgba(0,0,0,.2);
         }
 
         &.increment {
             border-radius: 0 0.95em 0.95em 0;
             justify-content: flex-end;
             margin-left: -0.75em;
+            box-shadow: inset -1px 1px 0 1px rgba(0,0,0,.2);
         }
     }
 </style>
