@@ -3,7 +3,6 @@
         <div class="history">
             <div 
                 class="icon-holder"
-                :style="{'--icon-color': shouldShuffle ? 'var(--yellow)' : '#777'}"
                 @click="$store.dispatch('shuffleDeck')">
 
                 <icon v-if="shouldShuffle" icon="redo-alt"></icon>
@@ -25,7 +24,6 @@
         </div>
 
         <attack-modifier-deck></attack-modifier-deck>
-        test
         <div class="bless-curse">
             <div class="bless">
                 <counter
@@ -53,36 +51,6 @@
                         transform: 'translate(0,-8%)',
                         width: '110%',
                         height: '110%',
-                    }" />
-            </div>
-        </div>
-        <div class="hp-exp">
-            <div class="hp">
-                <counter
-                    title="HP"
-                    :value="$store.state.hp"
-                    increment="increaseHp"
-                    decrement="decreaseHp"
-                    color="#e74342"
-                    :icon="require('@/assets/hp.svg')"
-                    :iconStyle="{
-                        transform: 'translate(40%,25%)',
-                        width: '110%',
-                        height: '110%',
-                    }" />
-            </div>
-            <div class="exp">
-                <counter
-                    title="EXP"
-                    :value="$store.state.exp"
-                    increment="increaseExp"
-                    decrement="decreaseExp"
-                    color="#3277ba"
-                    :icon="require('@/assets/exp.svg')"
-                    :iconStyle="{
-                        transform: 'translate(50%,25%)',
-                        width: '150%',
-                        height: '150%',
                     }" />
             </div>
         </div>
@@ -125,22 +93,31 @@ export default {
         // margin-right: 2%;
     }
 
+    section {
+        padding: 0 1em;
+        overflow: visible;
+    }
+
     .history {
         display: flex;
         flex-flow: row wrap;
-        height: 50px;
+        height: 40px;
         overflow: hidden;
         margin-bottom: 10px;
+        // max-width: 100%;
+        position: relative;
+        z-index: 100;
+        margin-right: -1em;
 
         .icon-holder {
-            width: 15%;
-            float: left;
             font-size: 2em;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             position: relative;
-            color: var(--icon-color);
+            color: #777;
+            line-height: 1.3;
+            text-align: left;
+            width: 46px;
+            box-shadow: 0 0 5px rgba(0,0,0,1);
+            z-index: 10;
 
             @keyframes shake {
                 0% { transform: rotate(10deg)}
@@ -151,6 +128,7 @@ export default {
             }
 
             [data-icon="redo-alt"] {
+                color: var(--color);
                 animation: shake 2s ease infinite;
             }
         }
@@ -158,9 +136,12 @@ export default {
         .card-row-scroll {
             overflow: auto;
             height: 100%;
-            width: 85%;
+            width: calc(100% - 46px);
             -ms-overflow-style: none;  // IE 10+
             scrollbar-width: none;  // Firefox
+            position: relative;
+            z-index: 2;
+            padding-left: 5px;
 
             &::-webkit-scrollbar { 
                 display: none;  // Safari and Chrome
@@ -173,6 +154,7 @@ export default {
             line-height: 0;
             justify-content: flex-end;
             height: 100%;
+            z-index: -1;
 
             img {
                 height: 100%;
@@ -183,131 +165,16 @@ export default {
         }
     }
 
-    .bless-curse,
-    .hp-exp {
+    .bless-curse {
         color: #fff;
         display: flex;
-        flex-flow: row wrap;
+        flex-flow: row;
         justify-content: center;
         line-height: 0;
-        padding: 0 50px;
         margin-top: 20px;
-        // max-width: 400px;
-
-        .bless,
-        .curse,
-        .hp,
-        .exp {
-            flex: 1 auto;
-            display: flex;
-            flex-flow: row;
-            align-items: center;
-            justify-content: center;
-            padding: 0 10px;
-            width: 50%;
-            overflow: hidden;
-            font-size: 1.5em;
-
-            .icon {
-                width: 1.25em;
-                position: absolute;                
-                margin-right: auto;
-                margin-left: auto;
-                font-size: 1.25em;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%,-50%);
-                z-index: -1;
-                opacity: 0.5;
-
-                // &:after {
-                //     content: ':';
-                //     position: absolute;
-                //     top: 50%;
-                //     right: -.5em;
-                // }
-
-                &::before {
-                    content: '';
-                    display: block;
-                    padding-top: 100%;
-                    width: 100%;
-                }
-            }
-
-
-            .counter {
-                display: flex;
-                flex-flow: row wrap;
-
-                .amount {
-                    height: 2em;
-                    width: 2em;
-                    color: #222;
-                    border-radius: 50%;
-                    box-shadow: 0 0 0px 2px rgba(0,0,0,1);
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    line-height: 0;
-                    background: #fff;
-                    position: relative;
-                    z-index: 3;
-                    font-weight: 600;
-                }
-            }
-
-            .btn {
-                padding: 0.25em;
-                background: #fff;
-                color: #fff;
-                width: 2.3em;
-                height: 2em;
-                display: flex;
-                align-items: center;
-                background: rgba(#fff, 0.3);
-                padding: 0.5em;
-                position: relative;
-                z-index: 2;
-                
-                span {
-                    font-size: 0.75em;
-                }
-
-                &.decrement {
-                    border-radius: 1em 0 0 1em;
-                    justify-content: flex-start;
-                    margin-right: -0.75em;
-                }
-
-                &.increment {
-                    border-radius: 0 1em 1em 0;
-                    justify-content: flex-end;
-                    margin-left: -0.75em;
-                }
-            }
-        }
-
-        .bless {
-            .amount .icon {
-                color: #d1a016;
-                margin-top: -0.04em;
-            }
-
-            .btn {
-                background: #d1a016;
-            }
-        }
-
-        .curse {
-            .amount .icon {
-                color: #7847a8;
-            }
-
-            .btn {
-                background: #7847a8;
-            }
-        }
+        width: 100%;
+        font-size: 1.5em;
+        justify-content: center;
     }
 </style>
 

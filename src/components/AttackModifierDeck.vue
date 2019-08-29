@@ -16,9 +16,9 @@
                     :card="card"
                     :style="{'--z': i}" />
             </div>
-            <div class="deck-stats">
+            <!-- <div class="deck-stats">
                 {{deck.length}}/{{deck.length + drawnCards.length}}
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -31,8 +31,11 @@ export default {
         AttackModifierCard
     },
     computed: {
-        deck: ({$store}) => $store.getters.deck,
-        drawnCards: ({$store}) => $store.state.drawnCards
+        drawnCards: ({$store}) => $store.state.drawnCards,
+        deck: ({$store, drawnCards}) => {
+            return $store.getters.deck
+                .filter(card => drawnCards.map(c => c.name).indexOf(card.name) < 0 )
+        }
     },
     methods: {
         drawCard() {
@@ -51,6 +54,7 @@ export default {
         justify-content: space-between;
         position: relative;
         z-index: 1000;
+        max-width: 500px;
 
         .deck-inner {
             width: 100%;
@@ -91,7 +95,6 @@ export default {
             margin-top: 14px;
             color: #fff;
             font-size: 0.75em;
-            font-weight: 600;
             text-align: right;
             padding-right: 10px;
             position: relative;

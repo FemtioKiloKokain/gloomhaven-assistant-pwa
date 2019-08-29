@@ -47,7 +47,17 @@ export default new Vuex.Store({
         drawnCards: [],
         shouldShuffle: false,
         hp: 0,
-        exp: 0
+        exp: 0,
+        status: {
+            disarm: false,
+            immobilize: false,
+            invisible: false,
+            muddle: false,
+            poison: false,
+            strengthen: false,
+            stun: false,
+            wound: false
+        }
     },
     mutations: {
         setCharacter(state, chosenCharacter) {
@@ -114,6 +124,9 @@ export default new Vuex.Store({
         },
         decreaseExp(state) {
             state.exp--
+        },
+        toggleStatus(state, key) {
+            state.status[key] = !state.status[key]
         }
     },
     actions: {
@@ -141,6 +154,9 @@ export default new Vuex.Store({
         },
         curseDeck({commit}) {
             commit('curseDeck')
+        },
+        toggleStatus({commit}, key) {
+            commit('toggleStatus', key)
         }
     },
     getters: {
