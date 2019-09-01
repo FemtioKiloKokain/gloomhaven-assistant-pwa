@@ -31,7 +31,7 @@
                     <icon icon="spinner" />
                 </span>
             </div>
-            <transition name="page">
+            <transition name="page" v-else>
                 <router-view/>
             </transition>
         </div>

@@ -10,18 +10,18 @@ self.__precacheManifest = [
     "url": "/gloomhaven-assistant-pwa/91b85d10725441586b445eea7dfb2595.png"
   },
   {
-    "revision": "a8e9b93f84312af421a3",
-    "url": "/gloomhaven-assistant-pwa/js/chunk-vendors.d456410d.js"
+    "revision": "645d0f25f919bb18a887",
+    "url": "/gloomhaven-assistant-pwa/js/chunk-vendors.e1473598.js"
   },
   {
     "url": "/gloomhaven-assistant-pwa/ecac823c3a67dc4b7bb51e519abe418b.png"
   },
   {
-    "revision": "f8de838fbd9133df8c9d",
-    "url": "/gloomhaven-assistant-pwa/css/app.e08ecce6.css"
+    "revision": "177463250d7872e7bdd6",
+    "url": "/gloomhaven-assistant-pwa/css/app.fd08c4c9.css"
   },
   {
-    "revision": "106b67ae10a85b035a1d879a86709b1f",
+    "revision": "db60556a7b9d5fe022f1090c309da4b0",
     "url": "/gloomhaven-assistant-pwa/index.html"
   },
   {
@@ -973,8 +973,8 @@ self.__precacheManifest = [
     "url": "/gloomhaven-assistant-pwa/fb42befe1783b2c1f802a886cba83272.png"
   },
   {
-    "revision": "f8de838fbd9133df8c9d",
-    "url": "/gloomhaven-assistant-pwa/js/app.0e5e36a7.js"
+    "revision": "177463250d7872e7bdd6",
+    "url": "/gloomhaven-assistant-pwa/js/app.e6ecd3d2.js"
   },
   {
     "url": "/gloomhaven-assistant-pwa/ea76e4cabe3995cc377a8908f36c2d86.png"
