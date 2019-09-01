@@ -1,59 +1,65 @@
 <template>
     <div class="settings-page page-deck">
-        <div>Base deck</div>
-        <div class="deck character-deck">
-            <div 
-                class="card"
-                v-for="card in baseDeck"
-                :key="card.points"
-                :class="{ toggled: card.inModifierDeck }">
+        <div>
+            <div>Base deck</div>
+            <div class="deck character-deck">
+                <div 
+                    class="card"
+                    v-for="card in baseDeck"
+                    :key="card.points"
+                    :class="{ toggled: card.inModifierDeck }">
 
-                <div class="card-inner">
-                    <img 
-                        :src="require(`@/assets/gloomhaven/images/${card.image}`)"
-                        @click="toggleCard(card)"/>
-                </div>
+                    <div class="card-inner">
+                        <img 
+                            :src="require(`@/assets/gloomhaven/images/${card.image}`)"
+                            @click="toggleCard(card)"/>
+                    </div>
 
-                <div class="toggle">
-                    <icon :icon="card.inModifierDeck ? 'check' : 'times'"></icon>
-                </div>
-            </div>
-        </div>
-        <div>{{character.name}} deck</div>
-        <div class="deck character-deck">
-            <div 
-                class="card"
-                v-for="card in characterDeck"
-                :key="card.points"
-                :class="{ toggled: card.inModifierDeck }">
-
-                <div class="card-inner">
-                    <img 
-                        :src="require(`@/assets/gloomhaven/images/${card.image}`)"
-                        @click="toggleCard(card)"/>
-                </div>
-
-                <div class="toggle">
-                    <icon :icon="card.inModifierDeck ? 'check' : 'times'"></icon>
+                    <div class="toggle">
+                        <icon :icon="card.inModifierDeck ? 'check' : 'times'"></icon>
+                    </div>
                 </div>
             </div>
         </div>
-        <div>Additional extra lorem ipsum</div>
-        <div class="deck character-deck">
-            <div 
-                class="card"
-                v-for="card in additionalDeck"
-                :key="card.points"
-                :class="{ toggled: card.inModifierDeck }">
+        <div v-if="character">
+            <div>{{character.name}} deck</div>
+            <div class="deck character-deck">
+                <div 
+                    class="card"
+                    v-for="card in characterDeck"
+                    :key="card.points"
+                    :class="{ toggled: card.inModifierDeck }">
 
-                <div class="card-inner">
-                    <img 
-                        :src="require(`@/assets/gloomhaven/images/${card.image}`)"
-                        @click="toggleCard(card)"/>
+                    <div class="card-inner">
+                        <img 
+                            :src="require(`@/assets/gloomhaven/images/${card.image}`)"
+                            @click="toggleCard(card)"/>
+                    </div>
+
+                    <div class="toggle">
+                        <icon :icon="card.inModifierDeck ? 'check' : 'times'"></icon>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div>
+            <div>Additional extra lorem ipsum</div>
+            <div class="deck character-deck">
+                <div 
+                    class="card"
+                    v-for="card in additionalDeck"
+                    :key="card.points"
+                    :class="{ toggled: card.inModifierDeck }">
 
-                <div class="toggle">
-                    <icon :icon="card.inModifierDeck ? 'check' : 'times'"></icon>
+                    <div class="card-inner">
+                        <img 
+                            :src="require(`@/assets/gloomhaven/images/${card.image}`)"
+                            @click="toggleCard(card)"/>
+                    </div>
+
+                    <div class="toggle">
+                        <icon :icon="card.inModifierDeck ? 'check' : 'times'"></icon>
+                    </div>
                 </div>
             </div>
         </div>

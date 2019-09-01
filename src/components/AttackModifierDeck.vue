@@ -11,7 +11,7 @@
             <div class="flipped-cards">
                 <attack-modifier-card
                     v-for="(card, i) in drawnCards"
-                    :key="i"
+                    :key="card.name"
                     :index="i"
                     :card="card"
                     :style="{'--z': i}" />
@@ -31,7 +31,9 @@ export default {
         AttackModifierCard
     },
     computed: {
-        drawnCards: ({$store}) => $store.state.drawnCards,
+        drawnCards: ({$store}) => $store.state.drawnCards
+            .slice(Math.max($store.state.drawnCards.length - 2, 0)),
+    
         deck: ({$store, drawnCards}) => {
             return $store.getters.deck
                 .filter(card => drawnCards.map(c => c.name).indexOf(card.name) < 0 )
@@ -46,7 +48,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .attack-modifier-deck {
         padding: 0 60px;
         margin: 0 auto;
@@ -85,9 +87,18 @@ export default {
                 transform-style: preserve-3d;
                 z-index: 2;
 
+                // .flip-card {
+                //     display: none;
+
+                //     &:last-child {
+                //         display: block;
+                //     }
+                // }
+
                 * {
                     pointer-events: none;
                 }
+
             }
         }
 

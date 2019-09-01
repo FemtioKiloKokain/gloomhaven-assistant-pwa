@@ -64,7 +64,8 @@ export default {
         }
     },
     computed: {
-        character: ({$store}) => $store.state.character
+        character: ({$store}) => $store.state.character,
+        deck: ({$store}) => $store.getters.deck
     }
 }
 </script>

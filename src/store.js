@@ -15,6 +15,11 @@ const vuexPersist = new VuexPersist({
 const baseDeck = attackModifiersData.slice(30, 50)
 baseDeck.forEach(card => {
     card.inModifierDeck = true
+
+    const img = new Image()
+    img.src = require(`@/assets/gloomhaven/images/${card.image}`)
+
+    img.onload = () => { commit('addDrawnCard', card) }
 })
 const additionalDeck = [
     ...attackModifiersData.slice(60,70),
@@ -22,6 +27,11 @@ const additionalDeck = [
 ]
 additionalDeck.forEach(card => {
     card.inModifierDeck = false
+
+    const img = new Image()
+    img.src = require(`@/assets/gloomhaven/images/${card.image}`)
+
+    img.onload = () => { commit('addDrawnCard', card) }
 })
 
 const blessCard = attackModifiersData[50]
@@ -69,6 +79,11 @@ export default new Vuex.Store({
 
             deck.forEach(card => {
                 card.inModifierDeck = false
+                
+                const img = new Image()
+                img.src = require(`@/assets/gloomhaven/images/${card.image}`)
+    
+                img.onload = () => { commit('addDrawnCard', card) }
             })
 
             state.characterDeck = deck
@@ -145,6 +160,9 @@ export default new Vuex.Store({
             img.onload = () => { commit('addDrawnCard', card) }
             
             if(cardEffects[card.points]) commit(cardEffects[card.points], card)
+        },
+        preloadImages({getters}) {
+            console.log(getters.deck)
         },
         shuffleDeck({commit}) {
             commit('resetDrawnCards')
