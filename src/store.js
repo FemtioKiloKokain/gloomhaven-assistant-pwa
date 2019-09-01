@@ -6,7 +6,6 @@ import localforage from 'localforage'
 import characters from '@/characters'
 import attackModifiersData from "@/assets/gloomhaven/data/attack-modifiers.js"
 
-
 const vuexPersist = new VuexPersist({
     key: 'gloomhaven',
     storage: localforage
@@ -15,23 +14,14 @@ const vuexPersist = new VuexPersist({
 const baseDeck = attackModifiersData.slice(30, 50)
 baseDeck.forEach(card => {
     card.inModifierDeck = true
-
-    const img = new Image()
-    img.src = require(`@/assets/gloomhaven/images/${card.image}`)
-
-    img.onload = () => { commit('addDrawnCard', card) }
 })
+
 const additionalDeck = [
     ...attackModifiersData.slice(60,70),
     ...attackModifiersData.slice(80,85)
 ]
 additionalDeck.forEach(card => {
     card.inModifierDeck = false
-
-    const img = new Image()
-    img.src = require(`@/assets/gloomhaven/images/${card.image}`)
-
-    img.onload = () => { commit('addDrawnCard', card) }
 })
 
 const blessCard = attackModifiersData[50]
@@ -48,6 +38,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        loading: false,
         character: null,
         baseDeck,
         additionalDeck,
@@ -73,17 +64,9 @@ export default new Vuex.Store({
         setCharacter(state, chosenCharacter) {
             state.character = characters.find(c => c.value === chosenCharacter )
         },
-        setCharacterDeck(state, chosenCharacter) {
-            let deck = attackModifiersData
-                .filter(card => card.name.indexOf(chosenCharacter) !== -1 )
-
+        setCharacterDeck(state, deck) {
             deck.forEach(card => {
                 card.inModifierDeck = false
-                
-                const img = new Image()
-                img.src = require(`@/assets/gloomhaven/images/${card.image}`)
-    
-                img.onload = () => { commit('addDrawnCard', card) }
             })
 
             state.characterDeck = deck
@@ -142,12 +125,20 @@ export default new Vuex.Store({
         },
         toggleStatus(state, key) {
             state.status[key] = !state.status[key]
+        },
+        toggleLoading(state, loading) {
+            state.loading = loading
         }
     },
     actions: {
-        setCharacter({commit}, chosenCharacter) {
+        setCharacter({commit, dispatch}, chosenCharacter) {
             commit('setCharacter', chosenCharacter)
-            commit('setCharacterDeck', chosenCharacter)
+
+            const deck = attackModifiersData
+                .filter(card => card.name.indexOf(chosenCharacter) !== -1 )
+            
+            dispatch('preloadImages', deck)
+            commit('setCharacterDeck', deck)
         },
         drawCard({commit, getters}) {
             const deck = getters.deck
@@ -161,8 +152,26 @@ export default new Vuex.Store({
             
             if(cardEffects[card.points]) commit(cardEffects[card.points], card)
         },
-        preloadImages({getters}) {
-            console.log(getters.deck)
+        preloadImages({commit}, cards) {
+            commit('toggleLoading', true)
+
+            const images = cards.map(card => card.image)
+
+            const checkImage = path =>
+                new Promise(resolve => {
+                    const img = new Image();
+                    img.onload = () => resolve({path, status: 'ok'});
+                    img.onerror = () => resolve({path, status: 'error'});
+        
+                    img.src = require(`@/assets/gloomhaven/images/${path}`);
+                });
+
+            const loadImg = paths => Promise.all(paths.map(checkImage))
+            
+            loadImg(images).then(() => {
+                console.log('test')
+                commit('toggleLoading', false)
+            })
         },
         shuffleDeck({commit}) {
             commit('resetDrawnCards')

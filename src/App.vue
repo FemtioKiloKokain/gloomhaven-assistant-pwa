@@ -23,6 +23,14 @@
                 v-if="character"
                 v-html="character.icon"
                 class="page-background" />
+            <div 
+                class="loading"
+                v-if="loading">
+
+                <span>
+                    <icon icon="spinner" />
+                </span>
+            </div>
             <transition name="page">
                 <router-view/>
             </transition>
@@ -51,9 +59,9 @@
 
 <script>
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUser, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faUsers, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUser, faUsers)
+library.add(faUser, faUsers, faSpinner)
 
 const vh = window.innerHeight * 0.01
 
@@ -65,7 +73,11 @@ export default {
     },
     computed: {
         character: ({$store}) => $store.state.character,
-        deck: ({$store}) => $store.getters.deck
+        deck: ({$store}) => $store.getters.deck,
+        loading: ({$store}) => $store.state.loading
+    },
+    created() {
+        this.$store.dispatch('preloadImages', this.deck)
     }
 }
 </script>
@@ -164,8 +176,21 @@ body {
         }
     }
 
+    .loading {
+        position: absolute;
+        flex: 1 auto;
+        height: 100%;
+        width: 100%;
+        background: rgba(0,0,0,0.75);
+        z-index: 10000;
+        backdrop-filter: blur(2px);
+        display: flex;
+        align-items: center;
+        font-size: 5em;
+        justify-content: center;
+    }
+
     .page {
-        // height: 100%;
         flex: 1 auto;
         overflow: auto;
         position: relative;
