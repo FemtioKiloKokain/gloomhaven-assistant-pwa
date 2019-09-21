@@ -96,7 +96,7 @@ export default {
                         
                         &:last-child {
                             transform: 
-                                translateY(20%)
+                                translateY(21%)
                                 rotateX(180deg) 
                                 rotateZ(45deg);
                         }

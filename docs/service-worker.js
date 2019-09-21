@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/gloomhaven-assistant-pwa/precache-manifest.7fa4cd74a57ab19ffb14844a4e7170ca.js"
+  "/gloomhaven-assistant-pwa/precache-manifest.50df775211847d9ccd2183ca9b10d0cc.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "gloomhaven-assistant-pwa"});

@@ -1,5 +1,26 @@
 <template>
-    <div class="settings-page page-deck">
+    <div 
+        v-if="isLoading"
+        class="settings-page page-deck">
+        
+        <div>
+            <div>Base deck</div>
+            <div class="deck character-deck">
+                <div 
+                    class="card"
+                    v-for="i in 20"
+                    :key="i">
+
+                    <div class="card-inner">
+                        <div class="card-loading"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div 
+        v-else
+        class="settings-page page-deck">
         <div>
             <div>Base deck</div>
             <div class="deck character-deck">
@@ -79,6 +100,7 @@ export default {
         characterDeck: ({$store}) => $store.state.characterDeck,
         baseDeck: ({$store}) => $store.state.baseDeck,
         additionalDeck: ({$store}) => $store.state.additionalDeck,
+        isLoading: ({$store}) => $store.state.loading
     },
     methods: {
         toggleCard(card) {
@@ -97,6 +119,12 @@ export default {
 
         div {
             width: 100%;
+        }
+
+        .card-loading {
+            padding-top: 65%;
+            background: #f2f2f2;
+            border-radius: 5%/7.25%;
         }
 
         .card {

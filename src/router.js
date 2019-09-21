@@ -5,25 +5,27 @@ import AttackModifierView from './views/AttackModifierView.vue'
 import DeckView from './views/DeckView.vue'
 import ProfileView from './views/ProfileView.vue'
 
+import store from '@/store'
+
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
     mode: 'hash',
     base: process.env.BASE_URL,
     routes: [
         {
             path: '/',
-            name: 'attack',
+            name: 'Attack',
             component: AttackModifierView
         },
         {
             path: '/deck',
-            name: 'deck',
+            name: 'Deck',
             component: DeckView
         },
         {
             path: '/profile',
-            name: 'profile',
+            name: 'Profile',
             component: ProfileView
         },
         {
@@ -33,3 +35,13 @@ export default new Router({
         }
     ]
 })
+
+// const waitForStorageToBeReady = async (to, from, next) => {
+//     await store.restored
+//     console.log(store.state.initialized)
+//     if(store.state.initialized) next()
+//     else store.dispatch('initialize').then(next)
+// }
+// router.beforeEach(waitForStorageToBeReady)
+
+export default router

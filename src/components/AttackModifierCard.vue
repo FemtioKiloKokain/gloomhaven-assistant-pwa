@@ -4,13 +4,20 @@
         class="flip-card"
         ref="card">
                 
-        <Flip class="flip">        
-            <img 
-                class="front"
-                :src="require(`@/assets/gloomhaven/images/${card.image}`)" />
-            <img 
-                class="back"
-                :src="require('@/assets/images/attack_mod_back.jpg')" />
+        <Flip class="flip">
+            <div class="front">
+                <div 
+                    class="card"
+                    v-for="card in cards" 
+                    :key="card.name">
+
+                    <img :src="require(`@/assets/gloomhaven/images/${card.image}`)" />
+                </div>
+            </div>        
+            
+            <div class="back">
+                <img :src="require('@/assets/images/attack_mod_back.jpg')" />
+            </div>
         </Flip>
     </Card>
 </template>
@@ -66,7 +73,7 @@ export default {
         })
     },
     props: {
-        card: Object,
+        cards: Array,
         index: Number
     },
     mounted() {
@@ -94,20 +101,39 @@ export default {
             transform-origin: center bottom;
         }
 
-        img {
+        .front, .back {
             position: absolute;
             top: 0;
             left: 0;
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
             backface-visibility: hidden;
             border-radius: 5%/7.25%;
-            box-shadow: 0 0 10px rgba(0,0,0, 0.25)
+            box-shadow: 0 0 10px rgba(0,0,0, 0.25);
+            overflow: hidden;
         }
         
         .back {
             transform: rotateY(180deg) rotateZ(180deg);
         }
 
+        .front {
+            display: flex;
+        }
+
+        .card {
+            position: relative;
+            flex: 1 0 auto;
+            overflow: hidden;
+        }
+
+        img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 100%;
+            width: auto;
+            transform: translate(-50%,-50%);
+        }
     }
 </style>

@@ -8,7 +8,11 @@ import attackModifiersData from "@/assets/gloomhaven/data/attack-modifiers.js"
 
 const vuexPersist = new VuexPersist({
     key: 'gloomhaven',
-    storage: localforage
+    storage: localforage,
+    reducer: (state) => ({
+        ...state,
+        ...{initialized: false}
+    }),
 })
 
 const baseDeck = attackModifiersData.slice(30, 50)
@@ -36,12 +40,12 @@ const cardEffects = {
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
     state: {
-        loading: false,
+        loading: true,
         character: null,
-        baseDeck,
-        additionalDeck,
+        baseDeck: baseDeck,
+        additionalDeck: additionalDeck,
         characterDeck: [],
         blesses: [],
         curses: [],
@@ -50,16 +54,17 @@ export default new Vuex.Store({
         hp: 0,
         exp: 0,
         status: {
+            strengthen: false,
+            invisible: false,
             disarm: false,
             immobilize: false,
-            invisible: false,
             muddle: false,
             poison: false,
-            strengthen: false,
             stun: false,
             wound: false
         }
     },
+
     mutations: {
         setCharacter(state, chosenCharacter) {
             state.character = characters.find(c => c.value === chosenCharacter )
@@ -71,8 +76,8 @@ export default new Vuex.Store({
 
             state.characterDeck = deck
         },
-        addDrawnCard(state, card) {
-            state.drawnCards.push(card)
+        addDrawnCard(state, cards) {
+            state.drawnCards.push(cards)
         },
         resetDrawnCards(state) {
             state.drawnCards = []
@@ -111,67 +116,89 @@ export default new Vuex.Store({
         notifyShuffle(state) {
             state.shouldShuffle = true
         },
-        increaseHp(state) {
-            state.hp++
-        },
-        decreaseHp(state) {
-            state.hp--
-        },
-        increaseExp(state) {
-            state.exp++
-        },
-        decreaseExp(state) {
-            state.exp--
-        },
-        toggleStatus(state, key) {
-            state.status[key] = !state.status[key]
-        },
+        
+        increaseHp: (state) => 
+            state.hp++,
+        decreaseHp: (state) => 
+            state.hp--,
+        increaseExp: (state) => 
+            state.exp++,
+        decreaseExp: (state) => 
+            state.exp--,
+        toggleStatus: (state, key) => 
+            state.status[key] = !state.status[key],
         toggleLoading(state, loading) {
             state.loading = loading
         }
     },
+
     actions: {
+        initialize({state, dispatch}) {
+            const cards = [
+                ...baseDeck, 
+                ...additionalDeck,
+                ...state.characterDeck, 
+                ...[blessCard, curseCard]
+            ]
+
+            return dispatch('preloadImages', cards)
+        },
         setCharacter({commit, dispatch}, chosenCharacter) {
             commit('setCharacter', chosenCharacter)
 
             const deck = attackModifiersData
                 .filter(card => card.name.indexOf(chosenCharacter) !== -1 )
             
-            dispatch('preloadImages', deck)
-            commit('setCharacterDeck', deck)
+            dispatch('preloadImages', deck).then(() => {
+                commit('setCharacterDeck', deck)
+            })
         },
-        drawCard({commit, getters}) {
-            const deck = getters.deck
-            if(!deck.length) return
-
-            const card = deck[Math.floor(Math.random() * deck.length)]
-            const img = new Image()
-            img.src = require(`@/assets/gloomhaven/images/${card.image}`)
-
-            img.onload = () => { commit('addDrawnCard', card) }
+        drawCard({commit, dispatch, getters}, drawTwo = false) {
+            const cards = []
+            let deck = getters.deck
             
-            if(cardEffects[card.points]) commit(cardEffects[card.points], card)
+            //Pull random card from remaining cards
+            const draw = () => {
+                if(!deck.length) {
+                    dispatch('shuffleDeck')
+                    deck = getters.deck
+                }
+
+                const card = deck[Math.floor(Math.random() * deck.length)]
+                
+                deck = deck.filter(c => c != card)
+                
+                if(cardEffects[card.points]) commit(cardEffects[card.points], card)
+                
+                card.double = drawTwo
+                cards.push(card)
+            }
+
+            draw()
+            if(drawTwo) draw()
+    
+            commit('addDrawnCard', cards)
         },
         preloadImages({commit}, cards) {
             commit('toggleLoading', true)
 
-            const images = cards.map(card => card.image)
-
-            const checkImage = path =>
+            const checkImage = card =>
                 new Promise(resolve => {
                     const img = new Image();
+                    const path = require(`@/assets/gloomhaven/images/${card.image}`)
+
                     img.onload = () => resolve({path, status: 'ok'});
                     img.onerror = () => resolve({path, status: 'error'});
         
-                    img.src = require(`@/assets/gloomhaven/images/${path}`);
+                    img.src = path;
+
+                    console.log(img)
                 });
 
-            const loadImg = paths => Promise.all(paths.map(checkImage))
+            const loadImg = () => Promise.all(cards.map(checkImage))
+                .then(() => { commit('toggleLoading', false) })
             
-            loadImg(images).then(() => {
-                console.log('test')
-                commit('toggleLoading', false)
-            })
+            return loadImg(cards)
         },
         shuffleDeck({commit}) {
             commit('resetDrawnCards')
@@ -197,12 +224,16 @@ export default new Vuex.Store({
 
             const blesses = state.blesses
             const curses = state.curses
+            const drawn = state.drawnCards.flat()
 
             const deck = [...base, ...char, ...additional, ...blesses, ...curses]
-                .filter(card => state.drawnCards.map(c => c.name).indexOf(card.name) < 0 )
-
+                .filter(card => drawn.map(c => c.name)
+                .indexOf(card.name) < 0)
+            
             return deck 
         }
     },
     plugins: [vuexPersist.plugin]
 });
+
+export default store

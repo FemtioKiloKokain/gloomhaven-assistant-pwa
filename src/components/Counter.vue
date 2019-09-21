@@ -1,6 +1,6 @@
 <template>
     <div class="counter-wrapper">
-        <span>{{title}}</span>
+        <!-- <span>{{title}}</span> -->
         <div 
             class="counter"
             :style="{'--color': color}">
@@ -100,11 +100,13 @@ export default {
             width: 2em;
             color: #222;
             border-radius: 50%;
-            box-shadow: 
-                0 0 0px 2px rgba(0,0,0,1),
-                // inset 0 0 20px rgba(0,0,0,.1),
-                inset 0 1.5px 0 1px rgba(0,0,0,.15),
-                inset 0 -6px 0 1px #fff;
+            // box-shadow: 
+            //     0 0 0px 2px rgba(0,0,0,1),
+            //     inset 0 1.5px 0 1px rgba(0,0,0,.15),
+            //     inset 0 -6px 0 1px #fff;
+            // box-shadow: 
+            //     inset 0 0 0 2px #fff;
+            border: 1px solid #fff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -154,21 +156,21 @@ export default {
             color: transparent;
             transform: translateY(-0.05em);
             font-size: 1.75em;
-            text-shadow: 0 0 0 #fff, -1px -1px rgba(0,0,0,0.2);
+            text-shadow: 0 0 0 #fff, 1px 1px rgba(0,0,0,0.2);
         }
 
         &.decrement {
             border-radius: 0.95em 0 0 0.95em;
             justify-content: flex-start;
             margin-right: -0.75em;
-            box-shadow: inset 1px 1px 0 1px rgba(0,0,0,.2);
+            // box-shadow: inset 1px 1px 0 1px rgba(0,0,0,.2);
         }
 
         &.increment {
             border-radius: 0 0.95em 0.95em 0;
             justify-content: flex-end;
             margin-left: -0.75em;
-            box-shadow: inset -1px 1px 0 1px rgba(0,0,0,.2);
+            // box-shadow: inset -1px 1px 0 1px rgba(0,0,0,.2);
         }
     }
 </style>

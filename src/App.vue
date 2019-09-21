@@ -1,58 +1,34 @@
 <template>
-    <div 
-        id="app"
-        :style="{
-            '--color': character ? character.color : '#fff',
-            '--vh': `${vh}px`
-            }">
-
-        <div class="char">
-            <div v-if="character">
-                <span 
-                    class="character-icon"
-                    v-html="character.icon" />
-                <span class="character-name">{{character.name}}</span>
-            </div>
-            <div v-else>
-                <span class="character-name">Gloomhaven</span>
-            </div>
-        </div>
-
+    <div id="app" :style="style">
         <div class="page">
-            <div 
+            <!-- <div 
                 v-if="character"
                 v-html="character.icon"
-                class="page-background" />
-            <div 
-                class="loading"
-                v-if="loading">
-
-                <span>
-                    <icon icon="spinner" />
-                </span>
-            </div>
-            <transition name="page" v-else>
-                <router-view/>
+                class="page-background" /> -->
+                
+            <transition name="page">
+                <router-view v-if="initialized"/>
             </transition>
         </div>
 
         <div class="menu">
-            <!-- <div class="circle"></div> -->
-            <router-link :to="{name: 'attack'}">
-                <span v-html="require('@/assets/attack.svg')" />
-            </router-link>
-            <router-link :to="{name: 'deck'}">
-                <span v-html="require('@/assets/deck2.svg')" :style="{marginRight: '-2px'}"/>
-                <!-- <span class="text">Profile</span> -->
-            </router-link>
-            <router-link :to="{name: 'profile'}">
-                <span><icon icon="user"></icon></span>
-                <!-- <span class="text">Profile</span> -->
-            </router-link>
-            <router-link :to="{name: 'profile'}">
-                <span><icon icon="users"></icon></span>
-                <!-- <span class="text">Profile</span> -->
-            </router-link>
+            <nav>
+                <router-link :to="{name: 'Attack'}">
+                    <div v-html="require('@/assets/attack.svg')" />
+                </router-link>
+                <router-link :to="{name: 'Deck'}">
+                    <!-- <span>Deck</span> -->
+                    <div v-html="require('@/assets/deck2.svg')" />
+                </router-link>
+                <router-link :to="{name: 'Profile'}" class="character-icon">
+                    <div 
+                        v-if="character" 
+                        v-html="icon">
+                        
+                    </div>
+                    <div v-else>hej</div>
+                </router-link>
+            </nav>
         </div>
     </div>
 </template>
@@ -63,21 +39,31 @@ import { faUser, faUsers, faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faUser, faUsers, faSpinner)
 
-const vh = window.innerHeight * 0.01
-
 export default {
     data() {
         return {
-            vh: vh
+            initialized: false
         }
     },
     computed: {
         character: ({$store}) => $store.state.character,
-        deck: ({$store}) => $store.getters.deck,
-        loading: ({$store}) => $store.state.loading
+        loading: ({$store}) => $store.state.loading,
+        style: ({character}) => {
+            const color = character ? character.color : '#fff'
+
+            return {
+                '--color': color
+            }
+        },
+        icon: ({character}) => character
+            ? character.icon
+            : ''
     },
-    created() {
-        this.$store.dispatch('preloadImages', this.deck)
+    async beforeCreate() {
+        await this.$store.restored
+
+        this.$store.dispatch('initialize')
+            .then(() => this.initialized = true )
     }
 }
 </script>
@@ -96,18 +82,21 @@ body {
         box-sizing: border-box;
     }
 }
+
 #app {
     --yellow: #d1a016;
     --purple: #7847a8;
     --red: #e74342;
     --blue: #3277ba;
 
+    --border-radius: 5%/7.25%;
+
     font-family: 'Grenze', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    height: 100%;
     text-align: center;
     color: #d7d7d7;
-    height: calc(var(--vh, 1vh) * 100);
     width: 100%;
     background: #000;
     overflow: hidden;
@@ -128,52 +117,18 @@ body {
         font-size: 2em;
     }
 
-    .page-enter-active, .page-leave-active {
+    .page-enter-active, 
+    .page-leave-active {
         transition: opacity 0.33s, transform 0.33s;
     }
 
-    .page-enter, .page-leave-to {
+    .page-enter, 
+    .page-leave-to {
         opacity: 0;
         position: fixed;
         transform: translateY(2.5%);
         left: 0;
         right: 0;
-    }
-
-    .char {
-        padding: 0.25em 0.2em 0;
-        display: flex;
-        flex-flow: row wrap;
-        font-family: 'Pirata One', 'Grenze', sans-serif;
-        box-shadow: 0 0 10px #000;
-        position: relative;
-        z-index: 10000;
-        border-bottom: 1px solid #111;
-
-        > div {
-            display: flex; 
-            flex-flow: row wrap;
-            align-items: center;
-            font-size: 2em;
-        }
-
-        .character-name {
-            padding-left: 0.5em;
-        }
-
-        .character-icon {
-            display: block;
-            width: 60px;
-            height: 60px;
-            position: relative;
-            color: var(--color);
-            margin-right: -0.5em;
-
-            svg {
-                width: 100%;
-                height: auto;
-            }
-        }
     }
 
     .loading {
@@ -194,19 +149,18 @@ body {
         flex: 1 auto;
         overflow: auto;
         position: relative;
-        transform: translateX(0);
+        // transform: translateX(0);
         padding-top: 0.5em;
+        padding-bottom: 60px;
 
         .page-background {
-            height: 100%;
+            height: calc(100% - 60px);
             width: 100%;
             position: fixed;
             margin: 0 auto;
             top: 0;
             left: 0;
-            // display: flex;
-            // justify-content: center;
-            opacity: 0.05;
+            opacity: 0.1;
             z-index: -1;
             overflow: hidden;
 
@@ -215,62 +169,71 @@ body {
                 top: 0;
                 left: 0;
                 width: 300%;
-                height: 300%;
+                height: 200%;
                 transform: 
-                    translateX(-7.5%)
-                    translateY(-32.5%);
+                    translateX(-12.5%)
+                    translateY(-25%);
             }
         }
     }
 
     .menu {
+        position: absolute;
         margin-top: auto;
         width: 100%;
         display: flex;
         flex-flow: row wrap;
         justify-content: center;
-        // border-top: 3px solid var(--color);
-        box-shadow: 0 0 10px #000;
-        background: #000;
         flex-shrink: 0;
-        position: relative;
         z-index: 10000;
-        // padding-bottom: 0.5em;
+        height: 75px;
+        align-items: flex-end;
+        bottom: 0;
 
-        .circle {
-            width: 3em;
-            height: 3em;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+        nav {
+            height: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin: 0 10px;
+            // border-top: 3px solid var(--color);
+            background: #000;
+            box-shadow: 0 -1px 4px 1px rgba(0,0,0,.7);
+
+            a {
+                color: #777;
+                text-align: center;
+                width: calc(50% - 35px);
+                padding: 10px;
+
+                div{
+                    height: 100%;
+                    width: 100%;
+                    display: block;
+                    position: relative;
+                }
+
+                &.router-link-exact-active {
+                    color: #fff;
+                }
+
+                svg {
+                    height: 100%;
+                    width: auto;
+                }
+            }
         }
 
-        a {
-            margin: 0 1em;
-            flex: 1 auto;
-            text-align: center;
-            color: #d7d7d7;
-            height: 100%;
-            box-shadow: inset 0 3px 0 rgba(255,255,255,0.15);
-
-            &.router-link-exact-active {
-                box-shadow: inset 0 3px 0 var(--color);
-            }
-
-            span {
-                padding: 0.85em .5em;
-                display: inline-block;
-                height: 100%;
-                // border-radius: 50%;
-                width: 3.5em;
-                height: 3.5em;
-            }
+        .character-icon {
+            position: relative;
+            color: var(--color);
 
             svg {
-                height: 100%;
-                width: auto;
+                height: 120%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
             }
         }
     }

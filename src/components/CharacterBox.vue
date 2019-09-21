@@ -44,16 +44,20 @@
             </div>
         </div>
         <div class="status-effects">
-            <div
-                class="effect-wrapper"
+            <div 
+                class="status-effect"
                 v-for="(effect, key) in status"
                 :key="key"
                 :data-active="effect"
+                :style="{'--status-color': statusColors[key]}"
                 @click="$store.dispatch('toggleStatus', key)">
 
-                <span 
-                    class="keep-svg-style" 
-                    v-html="require(`@/assets/status-icons/${key}.svg`)" />
+                <div class="status-inner">
+                    <lottie 
+                        :autoplay="false"
+                        :play="effect"
+                        :name="key"/>
+                </div>
             </div>
         </div>
     </div>
@@ -61,11 +65,29 @@
 
 <script>
 import Counter from '@/components/Counter'
+import Lottie from '@/components/UI/Lottie'
 
 export default {
     name: 'character-box',
     components: {
         Counter,
+        Lottie
+    },
+    data () {
+        const statusColors = {
+            strengthen: '#5198d3',
+            invisible: '#201d19',
+            disarm: '#6e7b7f',
+            immobilize: '#9f3027',
+            muddle: '#7a5b42',
+            poison: '#848366',
+            stun: '#324165',
+            wound: '#e15811'
+        }
+
+        return {
+            statusColors
+        }
     },
     computed: {
         character: ({$store}) => $store.state.character,
@@ -76,11 +98,10 @@ export default {
 
 <style lang="scss">
     .character-box {
-        padding: 30px 0px;
         display: flex;
         flex-flow: column wrap;
         align-items: flex-start;
-        margin: 0 auto;
+        margin: 20px auto 0;
 
         .char {
             display: flex;
@@ -140,189 +161,73 @@ export default {
         }
 
         .status-effects {
-            padding: 20px 20px;
-            max-width: 280px;
+            // padding: 20px 20px;
+            max-width: 270px;
             width: 100%;
-            margin: 40px auto 0;
+            margin: 20px auto 0;
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
 
-            .effect-wrapper {
-                display: inline-block;
-                padding: 10px;
+            .status-effect {
                 width: 25%;
-                margin-top: -12%;
                 position: relative;
-
-                span {
-                    position: absolute;
-                    // border: 1px solid red;
-                    left: 12px;
-                    top: 12px;
-                    right: 12px;
-                    bottom: 12px;
-                    transform: rotate(45deg);
-                    // opacity: 0.5;
+                transform: scale(1);
+                transition: transform 0.1s;
+                padding: 3px;
+                
+                .status-inner {
                     overflow: hidden;
-                    transition: all 0.05s;
-                    filter: grayscale(1);
-
-                    svg {
-                        transform: rotate(-45deg);
-                    }
+                    border-radius: var(--border-radius);
                 }
 
-                &::after {
-                    content: '';
-                    display: block;
-                    padding-top: 100%;
+                .lottie {
+                    position: relative;
+                    z-index: 1;
+                    filter: grayscale(.5);
+                    background: var(--status-color);
+                }
+
+                &[data-active] {
+                    .lottie {
+                        filter: none;
+                        opacity: 1;
+                        transform: scale(1.2);
+
+                        svg {
+                            filter: drop-shadow(2px 2px 0px rgba(0,0,0,.2));
+                        }
+                    }
+
+                    &::before {
+                        // content: '';
+                        display: block;
+                    }
                 }
 
                 &::before {
-                    content: '';
                     display: block;
                     position: absolute;
-                    top: 10px;
-                    left: 10px;
-                    right: 10px;
-                    bottom: 10px;
-                    transform: rotate(45deg);
-                    border: 1px solid rgba(#f5f5f5, .2);
-                    border-radius: 3px;
-                    z-index: 10;
-                    box-shadow: 
-                        0 0 0 2px #000;
+                    top: 3px;
+                    left: 3px;
+                    right: 3px;
+                    bottom: 3px;
+                    z-index: -1;
+                    box-shadow: 0 0 3px 2px var(--status-color);
+                    opacity: 0.5;
                 }
 
-                &:first-child {
-                    margin-left: -12.5%;
+                &:active {
+                    transform: scale(1.025);
                 }
+                
 
-                &:last-child {
-                    margin-right: -12.5%;
-                }
-
-                &[data-active="true"] {
-                    span {
-                        opacity: 1;
-                        top: 0;
-                        left: 0;
-                        right: 0;
-                        bottom: 0;
-                        filter: grayscale(0);
-                    }
-                }
+                // > div {
+                //     // margin-top: -4px;
+                //     // margin-left: -4px;
+                // }
             }
         }
-
-        // .portrait-wrapper {
-        //     width: auto;
-        //     overflow: hidden;
-        //     width: 33%;
-        //     position: relative;
-        //     border-radius: 5px;
-
-        //     .border {
-        //         position: absolute;
-        //         z-index: 2;
-        //         top: 0;
-        //         left: 0;
-        //         height: 100%;
-        //         width: 100%;
-        //         border: 2px solid #000;
-        //         border-radius: 4px;
-        //         overflow: hidden;
-        //         box-shadow: 
-        //             inset 0 0 0 8px #000,
-        //             inset 0 0 5px 8px rgba(0,0,0,1);
-
-        //         .inner-border {
-        //             position: absolute;
-        //             top: 0.25em;
-        //             left: 0.25em;
-        //             right: 0.25em;
-        //             bottom: 0.25em;
-        //             border: 4px double var(--color);
-        //             z-index: -1;
-        //             overflow: hidden;
-        //             // border-radius: 2px;
-        //         }
-        //         // mix-blend-mode: multiply;
-
-        //         .corner {
-        //             // display: none;
-        //             background-color: var(--color);
-        //             width: .75em;
-        //             height: .75em;
-        //             position: absolute;
-        //             box-shadow: 
-        //                 0 0 2px var(--color),
-        //                 0 0 2px 1px rgba(0,0,0,0.5);
-        //             z-index: -1;
-        //             // border: 1px solid #000;
-                    
-
-        //             // &::before,
-        //             // &::after {
-        //             //     content: '';
-        //             //     display: block;
-        //             //     position: absolute;
-        //             //     color: var(--color);
-        //             // }
-
-        //             // &::before {
-        //             //     height: calc(100% - 0.2em);
-        //             //     width: calc(100% - 0.2em);
-        //             // }
-
-        //             &.top-left {
-        //                 top: 0;
-        //                 left: 0;
-
-        //                 // &::before {
-        //                 //     top: 0;
-        //                 //     left: 0;
-        //                 //     border-right: 1px solid;
-        //                 //     border-bottom: 1px solid;
-        //                 // }
-        //             }
-
-        //             &.top-right {
-        //                 top: 0;
-        //                 right: 0;
-                        
-        //                 // &::before {
-        //                 //     top: 0;
-        //                 //     right: 0;
-        //                 //     border-left: 1px solid;
-        //                 //     border-bottom: 1px solid;
-        //                 // }
-        //             }
-
-        //             &.bottom-right {
-        //                 bottom: 0;
-        //                 right: 0;
-
-        //                 // &::before {
-        //                 //     bottom: 0;
-        //                 //     right: 0;
-        //                 //     border-left: 1px solid;
-        //                 //     border-top: 1px solid;
-        //                 // }
-        //             }
-
-        //             &.bottom-left {
-        //                 bottom: 0;
-        //                 left: 0;
-
-        //                 // &::before {
-        //                 //     bottom: 0;
-        //                 //     left: 0;
-        //                 //     border-right: 1px solid;
-        //                 //     border-top: 1px solid;
-        //                 // }
-        //             }
-        //         }
-        //     }
-        // }
 
         // .portrait {
         //     padding-top: 136%; 
@@ -335,14 +240,3 @@ export default {
     }
 </style>
 
-<style lang="scss">
-    .character-icon svg {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: 
-            translate(-50%,-53%);
-        width: 100%;
-        background: none;
-    }
-</style>

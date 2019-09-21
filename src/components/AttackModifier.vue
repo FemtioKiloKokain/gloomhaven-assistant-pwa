@@ -14,11 +14,14 @@
                     name="history-card" 
                     tag="div">
 
-                    <img
-                        v-for="card in drawnCards"
-                        :key="card.name"
-                        :src="require(`@/assets/gloomhaven/images/${card.image}`)">
-
+                    <div 
+                        class="history-card"
+                        v-for="card in drawnCards.flat()"
+                        :double-card="card.double"
+                        :key="card.name">
+                        
+                        <img :src="require(`@/assets/gloomhaven/images/${card.image}`)">
+                    </div>
                 </transition-group>
             </div>
         </div>
@@ -34,9 +37,9 @@
                     color="#d1a016"
                     :icon="require('@/assets/bless.svg')"
                     :iconStyle="{
-                        transform: 'translate(0,-4%)',
-                        width: '113%',
-                        height: '113%',
+                        transform: 'translate(-0.5%,-3.75%)',
+                        width: '130%',
+                        height: '130%',
                     }" />
             </div>
             <div class="curse">
@@ -80,21 +83,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .history-card-enter, .history-card-leave-to
-        /* .card-leave-active for <2.1.8 */ {
+    .history-card-enter, .history-card-leave-to {
         opacity: 0;
         transform: translateX(-100%);
-        // margin-right: -100%;
     }
+
     .history-card-enter-to {
         opacity: 1;
         transform: translateX(0);
         transition: all 0.5s 0.5s;
-        // margin-right: 2%;
     }
 
     section {
-        padding: 0 1em;
+        padding: 10px 1em 0;
         overflow: visible;
     }
 
@@ -104,7 +105,6 @@ export default {
         height: 40px;
         overflow: hidden;
         margin-bottom: 10px;
-        // max-width: 100%;
         position: relative;
         z-index: 100;
         margin-right: -1em;
@@ -156,11 +156,35 @@ export default {
             height: 100%;
             z-index: -1;
 
+            .history-card {
+                height: 100%;
+                margin-right: 8px;
+                transition: all 1.1s;
+                display: inline-block;
+                flex: 0 0 auto;
+                position: relative;
+
+                &[double-card] + [double-card]::after {
+                    content: '';
+                    display: block;
+                    background: #fff;
+                    position: absolute;
+                    z-index: 1;
+                    top: 50%;
+                    left: 100%;
+                    height: 30px;
+                    width: 8px;
+                    margin-top: -15px;
+                }
+            }
+
             img {
                 height: 100%;
+                width: auto;
+                position: relative;
+                z-index: 2;
                 border-radius: 5%/7.25%;
-                margin-right: 2%;
-                transition: all 1.1s;
+                box-shadow: 0 0 4px rgba(0,0,0,.75);
             }
         }
     }

@@ -1,7 +1,7 @@
 <template>
-    <div class="deck-wrapper">
+    <section class="deck-wrapper">
         <deck></deck>
-    </div>
+    </section>
 </template>
 <script>
 import Deck from '@/components/Deck'
@@ -13,3 +13,10 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+    section {
+        padding: 10px 10px 0;
+    }
+</style>
+
