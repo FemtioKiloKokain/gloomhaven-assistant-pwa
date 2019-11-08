@@ -11,13 +11,12 @@
             </transition>
         </div>
 
-        <div class="menu">
+        <!-- <div class="menu">
             <nav>
                 <router-link :to="{name: 'Attack'}">
                     <div v-html="require('@/assets/attack.svg')" />
                 </router-link>
                 <router-link :to="{name: 'Deck'}">
-                    <!-- <span>Deck</span> -->
                     <div v-html="require('@/assets/deck2.svg')" />
                 </router-link>
                 <router-link :to="{name: 'Profile'}" class="character-icon">
@@ -29,7 +28,7 @@
                     <div v-else>hej</div>
                 </router-link>
             </nav>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -42,7 +41,7 @@ library.add(faUser, faUsers, faSpinner)
 export default {
     data() {
         return {
-            initialized: false
+            initialized: true
         }
     },
     computed: {
@@ -60,10 +59,10 @@ export default {
             : ''
     },
     async beforeCreate() {
-        await this.$store.restored
+        // await this.$store.restored
 
-        this.$store.dispatch('initialize')
-            .then(() => this.initialized = true )
+        // this.$store.dispatch('initialize')
+        //     .then(() => this.initialized = true )
     }
 }
 </script>
@@ -77,6 +76,8 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    width: 100%;
+    height: 100%;
 
     * {
         box-sizing: border-box;
@@ -91,19 +92,17 @@ body {
 
     --border-radius: 5%/7.25%;
 
-    font-family: 'Grenze', Helvetica, Arial, sans-serif;
+    font-family: 'Dank Mono', 'Grenze', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     height: 100%;
     text-align: center;
     color: #d7d7d7;
     width: 100%;
+    height: 100%;
     background: #000;
-    overflow: hidden;
-    position: fixed;
-    transform: translateZ(0);
-    display: flex;
-    flex-flow: column;
+    padding: 14px;
+
 
     h1,
     h2,
@@ -131,115 +130,35 @@ body {
         right: 0;
     }
 
-    .loading {
-        position: absolute;
-        flex: 1 auto;
-        height: 100%;
-        width: 100%;
-        background: rgba(0,0,0,0.75);
-        z-index: 10000;
-        backdrop-filter: blur(2px);
-        display: flex;
-        align-items: center;
-        font-size: 5em;
-        justify-content: center;
-    }
-
-    .page {
-        flex: 1 auto;
-        overflow: auto;
-        position: relative;
-        // transform: translateX(0);
-        padding-top: 0.5em;
-        padding-bottom: 60px;
-
-        .page-background {
-            height: calc(100% - 60px);
-            width: 100%;
-            position: fixed;
-            margin: 0 auto;
-            top: 0;
-            left: 0;
-            opacity: 0.1;
-            z-index: -1;
-            overflow: hidden;
-
-            svg {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 300%;
-                height: 200%;
-                transform: 
-                    translateX(-12.5%)
-                    translateY(-25%);
-            }
-        }
-    }
-
-    .menu {
-        position: absolute;
-        margin-top: auto;
-        width: 100%;
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: center;
-        flex-shrink: 0;
-        z-index: 10000;
-        height: 75px;
-        align-items: flex-end;
-        bottom: 0;
-
-        nav {
-            height: 50px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            margin: 0 10px;
-            // border-top: 3px solid var(--color);
-            background: #000;
-            box-shadow: 0 -1px 4px 1px rgba(0,0,0,.7);
-
-            a {
-                color: #777;
-                text-align: center;
-                width: calc(50% - 35px);
-                padding: 10px;
-
-                div{
-                    height: 100%;
-                    width: 100%;
-                    display: block;
-                    position: relative;
-                }
-
-                &.router-link-exact-active {
-                    color: #fff;
-                }
-
-                svg {
-                    height: 100%;
-                    width: auto;
-                }
-            }
-        }
-
-        .character-icon {
-            position: relative;
-            color: var(--color);
-
-            svg {
-                height: 120%;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%,-50%);
-            }
-        }
-    }
-
-    *:not(.keep-svg-style) > svg {
+    *:not(.keep-svg-style) > svg * {
         fill: currentColor;
+    }
+
+    button {
+        background: none;
+        color: #f5f5f5;
+        border-radius: 4px;
+        display: inline-block;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0 0;
+        padding: 0px 1em;
+        border-width: 0;
+        font-family: sans-serif;
+        font-weight: normal;
+        font-size: inherit;
+        text-decoration: none;
+        line-height: 2em;
+        cursor: pointer;
+        font-size: 100%;
+        overflow: visible;
+        border: 1px solid currentColor;
+
+        &::-moz-focus-inner {
+            border: 0;
+            padding: 0;
+        }
     }
 }
 </style>

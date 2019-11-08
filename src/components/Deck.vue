@@ -1,5 +1,5 @@
 <template>
-    <div 
+    <!-- <div 
         v-if="isLoading"
         class="settings-page page-deck">
         
@@ -17,9 +17,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <div 
-        v-else
+
         class="settings-page page-deck">
         <div>
             <div>Base deck</div>
@@ -31,8 +31,7 @@
                     :class="{ toggled: card.inModifierDeck }">
 
                     <div class="card-inner">
-                        <img 
-                            :src="require(`@/assets/gloomhaven/images/${card.image}`)"
+                        <span v-text="card.name"
                             @click="toggleCard(card)"/>
                     </div>
 
@@ -52,8 +51,7 @@
                     :class="{ toggled: card.inModifierDeck }">
 
                     <div class="card-inner">
-                        <img 
-                            :src="require(`@/assets/gloomhaven/images/${card.image}`)"
+                        <span v-text="card.name"
                             @click="toggleCard(card)"/>
                     </div>
 

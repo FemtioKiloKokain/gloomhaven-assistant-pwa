@@ -1,26 +1,23 @@
 <template>
     <span
-        class="icon" 
-        v-html="require(`@/assets/icons/${name}.svg`)">
-        
+        class="icon"
+        :class="{'keep-svg-style': iconstyle != 'flat'}"
+        v-html="require(`@/assets/icons/${iconstyle}/${name}.svg`)">
     </span>
 </template>
 <script>
 export default {
     name: 'icon',
     props: {
-        name: String
+        name: String,
+        iconstyle: {
+            type: String,
+            default: 'normal'
+        }
     }
 }
 </script>
 <style lang="scss">
-    .icon {
-        display: inline-flex;
 
-        svg {
-            height: 1em;
-            width: 1em;
-        }
-    }
 </style>
 

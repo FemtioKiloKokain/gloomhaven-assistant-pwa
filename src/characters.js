@@ -1,5 +1,5 @@
 export default [
-    { 
+    {
         name: 'Cragheart',
         slug: 'cragheart',
         value: 'ch',
@@ -8,8 +8,8 @@ export default [
         color: '#8f9525',
         unlocked: true
     },
-    { 
-        name: 'Quartermaster', 
+    {
+        name: 'Quartermaster',
         slug: 'quartermaster',
         value: 'qm',
         mat: require('@/assets/gloomhaven/images/character-mats/quartermaster.png'),
@@ -78,4 +78,4 @@ export default [
         color: '#50c0ef',
         unlocked: true
     }
-]
+];

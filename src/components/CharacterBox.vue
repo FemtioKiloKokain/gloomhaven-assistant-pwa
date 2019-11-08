@@ -174,28 +174,32 @@ export default {
                 position: relative;
                 transform: scale(1);
                 transition: transform 0.1s;
-                padding: 3px;
+                padding: 8px;
                 
                 .status-inner {
                     overflow: hidden;
-                    border-radius: var(--border-radius);
+                    border-radius: 50%;
+                    border: 1px solid #fff;
                 }
 
                 .lottie {
                     position: relative;
                     z-index: 1;
-                    filter: grayscale(.5);
-                    background: var(--status-color);
+                    padding: 2px;
+                    background: transparent;
+                    transition: background 0.15s;
                 }
 
                 &[data-active] {
+                    .status-inner {
+                        border: 0;
+                    }
+
                     .lottie {
-                        filter: none;
-                        opacity: 1;
-                        transform: scale(1.2);
+                        background: var(--status-color);
 
                         svg {
-                            filter: drop-shadow(2px 2px 0px rgba(0,0,0,.2));
+                            filter: drop-shadow(1px 1px 0px rgba(0,0,0,.2));
                         }
                     }
 
@@ -213,8 +217,9 @@ export default {
                     right: 3px;
                     bottom: 3px;
                     z-index: -1;
-                    box-shadow: 0 0 3px 2px var(--status-color);
-                    opacity: 0.5;
+                    box-shadow: 0 0 0 1px rgba(255,255,255,1);
+                    opacity: 1;
+                    border-radius: 50%;
                 }
 
                 &:active {

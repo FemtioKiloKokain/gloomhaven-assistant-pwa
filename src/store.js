@@ -6,6 +6,8 @@ import localforage from 'localforage'
 import characters from '@/characters'
 import attackModifiersData from "@/assets/gloomhaven/data/attack-modifiers.js"
 
+import newAM from '@/assets/attack-modifiers/base.js'
+
 const vuexPersist = new VuexPersist({
     key: 'gloomhaven',
     storage: localforage,
@@ -15,7 +17,7 @@ const vuexPersist = new VuexPersist({
     }),
 })
 
-const baseDeck = attackModifiersData.slice(30, 50)
+const baseDeck = newAM
 baseDeck.forEach(card => {
     card.inModifierDeck = true
 })
@@ -143,15 +145,17 @@ const store = new Vuex.Store({
 
             return dispatch('preloadImages', cards)
         },
-        setCharacter({commit, dispatch}, chosenCharacter) {
+        setCharacter({commit}, chosenCharacter) {
             commit('setCharacter', chosenCharacter)
 
-            const deck = attackModifiersData
-                .filter(card => card.name.indexOf(chosenCharacter) !== -1 )
+            import(`@/assets/attack-modifiers/${chosenCharacter}`)
+                .then(deck => commit('setCharacterDeck', deck.default))
             
-            dispatch('preloadImages', deck).then(() => {
-                commit('setCharacterDeck', deck)
-            })
+            // .filter(card => card.name.indexOf(chosenCharacter) !== -1 )
+            
+            // dispatch('preloadImages', deck).then(() => {
+            //     commit('setCharacterDeck', deck)
+            // })
         },
         drawCard({commit, dispatch, getters}, drawTwo = false) {
             const cards = []
@@ -165,7 +169,6 @@ const store = new Vuex.Store({
                 }
 
                 const card = deck[Math.floor(Math.random() * deck.length)]
-                
                 deck = deck.filter(c => c != card)
                 
                 if(cardEffects[card.points]) commit(cardEffects[card.points], card)
@@ -203,15 +206,21 @@ const store = new Vuex.Store({
         shuffleDeck({commit}) {
             commit('resetDrawnCards')
         },
+        toggleStatus({commit}, key) {
+            commit('toggleStatus', key)
+        },
         blessDeck({commit}) {
             commit('blessDeck')
         },
         curseDeck({commit}) {
             commit('curseDeck')
         },
-        toggleStatus({commit}, key) {
-            commit('toggleStatus', key)
-        }
+        unblessDeck: ({commit}) => commit('unblessDeck'),
+        uncurseDeck: ({commit}) => commit('uncurseDeck'),
+        decreaseHp: ({commit}) => commit('decreaseHp'),
+        increaseHp: ({commit}) => commit('increaseHp'),
+        decreaseExp: ({commit}) => commit('decreaseExp'),
+        increaseExp: ({commit}) => commit('increaseExp'),
     },
     getters: {
         deck: (state) => {
@@ -228,7 +237,7 @@ const store = new Vuex.Store({
 
             const deck = [...base, ...char, ...additional, ...blesses, ...curses]
                 .filter(card => drawn.map(c => c.name)
-                .indexOf(card.name) < 0)
+                    .indexOf(card.name) < 0)
             
             return deck 
         }

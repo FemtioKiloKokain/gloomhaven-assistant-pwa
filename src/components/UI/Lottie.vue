@@ -33,7 +33,7 @@ export default {
         this.anim = lottie.loadAnimation({
             container: this.$refs.lottie,
             renderer: 'svg',
-            loop: true,
+            loop: this.loop,
             autoplay: this.play || this.autoplay,
             animationData: require(`@/assets/lottie/${this.name}`)
         })

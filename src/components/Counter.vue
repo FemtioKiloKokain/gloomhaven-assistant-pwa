@@ -4,16 +4,11 @@
         <div 
             class="counter"
             :style="{'--color': color}">
-
-            <div 
+            
+            <ripple                
                 class="btn decrement"
-                @click="$store.commit(decrement)">
+                @click.native="$store.dispatch(decrement)" />
 
-                <span>
-                    -
-                    <!-- <icon icon="minus" /> -->
-                </span>
-            </div>
             <div class="amount">
                 <div 
                     class="icon" 
@@ -22,19 +17,14 @@
                 </div>
                 <span>{{value}}</span>
             </div>
-            <div 
+            <ripple 
                 class="btn increment"
-                @click="$store.commit(increment)">
-
-                <span>
-                    +
-                    <!-- <icon icon="plus" /> -->
-                </span>
-            </div>
+                @click.native="$store.dispatch(increment)" />
         </div>
     </div>
 </template>
 <script>
+import Ripple from '@/components/UI/Ripple'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
@@ -42,6 +32,9 @@ library.add(faPlus, faMinus)
 
 export default {
     name: 'counter',
+    components: {
+        Ripple
+    },
     props: {
         title: String,
         value: Number,
@@ -137,22 +130,7 @@ export default {
         z-index: 2;
         overflow: hidden;
 
-        // &::before {
-        //     content: '';
-        //     display: block;
-        //     position: absolute;
-        //     top: 0;
-        //     left: 0;
-        //     right: 0;
-        //     bottom: 0;
-        //     background: url('../assets/gloomhaven/images/personal-goals/pg-back.png');
-        //     background-size: 150% auto;
-        //     background-position: center 70%;
-        //     mix-blend-mode: multiply;
-        //     opacity: 0.25;
-        // }
-        
-        span {
+        &::before {
             color: transparent;
             transform: translateY(-0.05em);
             font-size: 1.75em;
@@ -163,6 +141,10 @@ export default {
             border-radius: 0.95em 0 0 0.95em;
             justify-content: flex-start;
             margin-right: -0.75em;
+
+            &::before {
+                content: '-';
+            }
             // box-shadow: inset 1px 1px 0 1px rgba(0,0,0,.2);
         }
 
@@ -170,6 +152,10 @@ export default {
             border-radius: 0 0.95em 0.95em 0;
             justify-content: flex-end;
             margin-left: -0.75em;
+
+            &::before {
+                content: '+';
+            }
             // box-shadow: inset -1px 1px 0 1px rgba(0,0,0,.2);
         }
     }

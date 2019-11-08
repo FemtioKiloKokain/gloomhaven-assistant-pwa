@@ -1,7 +1,7 @@
 <template>
     <section>
         <attack-modifier />
-        <character-box />
+        <!-- <character-box /> -->
     </section>
 </template>
 

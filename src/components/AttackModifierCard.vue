@@ -12,6 +12,7 @@
                     :key="card.name">
 
                     <img :src="require(`@/assets/gloomhaven/images/${card.image}`)" />
+                    <!-- <span class="keep-svg-style" v-html="require(`@/assets/test.svg`)" /> -->
                 </div>
             </div>        
             
@@ -92,7 +93,7 @@ export default {
         .flip {
             height: 100%;
             width: 100%;
-            perspective: 1000;
+            perspective: 1000px;
             transform-style: preserve-3d;
             position: relative;
             transform-origin: right center;
@@ -104,7 +105,7 @@ export default {
         .front, .back {
             position: absolute;
             top: 0;
-            left: 0;
+            left: 0; 
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
@@ -127,7 +128,8 @@ export default {
             overflow: hidden;
         }
 
-        img {
+        img,
+        svg {
             position: absolute;
             top: 50%;
             left: 50%;
