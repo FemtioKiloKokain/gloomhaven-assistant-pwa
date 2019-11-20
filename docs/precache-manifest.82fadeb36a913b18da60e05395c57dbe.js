@@ -49,11 +49,11 @@ self.__precacheManifest = [
     "url": "/gloomhaven-assistant-pwa/b7997330576e8eee3c97f26a8667c593.png"
   },
   {
-    "revision": "442528c572715494e35c",
-    "url": "/gloomhaven-assistant-pwa/css/app.17803f84.css"
+    "revision": "8bcd6da8e8afae53fb16",
+    "url": "/gloomhaven-assistant-pwa/css/app.6a77d93f.css"
   },
   {
-    "revision": "e465b76e19a8f46c7e3bbf46f3d56550",
+    "revision": "ff03dfdbe9e893ab7bf29202880de718",
     "url": "/gloomhaven-assistant-pwa/index.html"
   },
   {
@@ -84,8 +84,8 @@ self.__precacheManifest = [
     "url": "/gloomhaven-assistant-pwa/f6b776591d63e4b2b3a5174ccef3f521.png"
   },
   {
-    "revision": "442528c572715494e35c",
-    "url": "/gloomhaven-assistant-pwa/js/app.57837cd4.js"
+    "revision": "8bcd6da8e8afae53fb16",
+    "url": "/gloomhaven-assistant-pwa/js/app.94b26cfe.js"
   },
   {
     "url": "/gloomhaven-assistant-pwa/d06923a8ebf2b3b3b9a51bdc5bfecd56.png"
