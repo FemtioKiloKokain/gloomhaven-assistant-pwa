@@ -1,37 +1,57 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import VuexPersist from 'vuex-persist'
-import localforage from 'localforage'
+// import localforage from 'localforage'
 
 import characters from '@/characters'
-import attackModifiersData from "@/assets/gloomhaven/data/attack-modifiers.js"
+// import attackModifiersData from "@/assets/gloomhaven/data/attack-modifiers.js"
 
-import newAM from '@/assets/attack-modifiers/base.js'
+import amBase from '@/assets/attack-modifiers/base.js'
+import amAdditional from '@/assets/attack-modifiers/additional.js'
 
 const vuexPersist = new VuexPersist({
     key: 'gloomhaven',
-    storage: localforage,
     reducer: (state) => ({
         ...state,
         ...{initialized: false}
     }),
 })
 
-const baseDeck = newAM
+const baseDeck = amBase
 baseDeck.forEach(card => {
-    card.inModifierDeck = true
+    card.inModifierDeck = false
 })
 
-const additionalDeck = [
-    ...attackModifiersData.slice(60,70),
-    ...attackModifiersData.slice(80,85)
-]
+const additionalDeck = amAdditional
 additionalDeck.forEach(card => {
     card.inModifierDeck = false
 })
 
-const blessCard = attackModifiersData[50]
-const curseCard = attackModifiersData[70]
+const blessCard = {
+    name: 'am-p-20',
+    points: 50,
+    color: 'purple',
+    colorHex: '#975a9f',
+    content: require('@/assets/general-icons/bless.svg'),
+    variant: 'bless',
+    description: '<em>Blessed Hit</em>',
+    image: 'attack-modifiers/base/player-mod/am-pm-01.png',
+    icon: require('@/assets/general-icons/bless.svg'),
+    inModifierDeck: true
+}
+
+const curseCard = {
+    name: 'am-p-19',
+    points: 70,
+    color: 'yellow',
+    colorHex: '#e0a633',
+    content: require('@/assets/general-icons/curse.svg'),
+    variant: 'curse',
+    description: '<em>Cursed Miss</em>',
+    image: 'attack-modifiers/base/player-mod/am-pm-21.png',
+    icon: require('@/assets/general-icons/curse.svg'),
+    inModifierDeck: true
+}
 
 const cardEffects = {
     50: 'unblessDeck',
@@ -42,9 +62,10 @@ const cardEffects = {
 
 Vue.use(Vuex);
 
+
 const store = new Vuex.Store({
     state: {
-        loading: true,
+        loading: false,
         character: null,
         baseDeck: baseDeck,
         additionalDeck: additionalDeck,
@@ -53,21 +74,25 @@ const store = new Vuex.Store({
         curses: [],
         drawnCards: [],
         shouldShuffle: false,
+        uiStyle: 'flat',
         hp: 0,
         exp: 0,
         status: {
-            strengthen: false,
-            invisible: false,
             disarm: false,
             immobilize: false,
             muddle: false,
             poison: false,
             stun: false,
-            wound: false
+            wound: false,
+            strengthen: false,
+            invisible: false,
         }
     },
 
     mutations: {
+        setUiStyle(state, style) {
+            state.uiStyle = style
+        },
         setCharacter(state, chosenCharacter) {
             state.character = characters.find(c => c.value === chosenCharacter )
         },
@@ -135,27 +160,25 @@ const store = new Vuex.Store({
     },
 
     actions: {
-        initialize({state, dispatch}) {
-            const cards = [
-                ...baseDeck, 
-                ...additionalDeck,
-                ...state.characterDeck, 
-                ...[blessCard, curseCard]
-            ]
-
-            return dispatch('preloadImages', cards)
+        initialize({getters, dispatch}) {
+            return dispatch('preloadImages', getters.combinedDecks)
+        },
+        changeUiStyle({commit, dispatch, getters}, style) {
+            if(style === 'traditional') {
+                commit('toggleLoading', true)
+                
+                dispatch('preloadImages', getters.combinedDecks)
+                    .then(() => {
+                        commit('toggleLoading', false)
+                    })
+            }
+            commit('setUiStyle', style)
         },
         setCharacter({commit}, chosenCharacter) {
             commit('setCharacter', chosenCharacter)
 
             import(`@/assets/attack-modifiers/${chosenCharacter}`)
-                .then(deck => commit('setCharacterDeck', deck.default))
-            
-            // .filter(card => card.name.indexOf(chosenCharacter) !== -1 )
-            
-            // dispatch('preloadImages', deck).then(() => {
-            //     commit('setCharacterDeck', deck)
-            // })
+                .then(deck => commit('setCharacterDeck', deck.default))            
         },
         drawCard({commit, dispatch, getters}, drawTwo = false) {
             const cards = []
@@ -223,19 +246,20 @@ const store = new Vuex.Store({
         increaseExp: ({commit}) => commit('increaseExp'),
     },
     getters: {
-        deck: (state) => {
-            const base = state.baseDeck
-                .filter(card => card.inModifierDeck)
-            const char = state.characterDeck
-                .filter(card => card.inModifierDeck)
-            const additional = state.additionalDeck
-                .filter(card => card.inModifierDeck)
-
-            const blesses = state.blesses
-            const curses = state.curses
+        combinedDecks: (state) => {
+            return [
+                ...state.baseDeck,
+                ...state.characterDeck,
+                ...state.additionalDeck,
+                ...state.blesses,
+                ...state.curses
+            ]
+        },
+        deck: (state, getters) => {
             const drawn = state.drawnCards.flat()
 
-            const deck = [...base, ...char, ...additional, ...blesses, ...curses]
+            const deck = getters.combinedDecks
+                .filter(card => card.inModifierDeck)
                 .filter(card => drawn.map(c => c.name)
                     .indexOf(card.name) < 0)
             

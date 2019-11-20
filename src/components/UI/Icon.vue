@@ -17,7 +17,10 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-
+<style lang="scss" scoped>
+    .icon {
+        position: relative;
+        overflow: hidden;
+    }
 </style>
 

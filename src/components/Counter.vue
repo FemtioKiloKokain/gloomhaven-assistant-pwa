@@ -1,21 +1,17 @@
 <template>
     <div class="counter-wrapper">
-        <!-- <span>{{title}}</span> -->
         <div 
             class="counter"
-            :style="{'--color': color}">
+            :style="{'--c': color}">
             
             <ripple                
                 class="btn decrement"
                 @click.native="$store.dispatch(decrement)" />
-
             <div class="amount">
-                <div 
-                    class="icon" 
-                    v-html="icon"
-                    :style="iconStyle">
-                </div>
-                <span>{{value}}</span>
+                <!-- <span class="icon" v-html="icon" /> -->
+                <span class="title">{{title}}</span>
+                <span class="value">{{value}}</span>
+                
             </div>
             <ripple 
                 class="btn increment"
@@ -45,118 +41,139 @@ export default {
             default: '#555'
         },
         icon: String,
-        iconStyle: Object
+        // iconStyle: Object
     }
 }
 </script>
 <style lang="scss">
-    .counter .icon svg {
-        height: 100%;
-        width: 100%;
-    }
-</style>
-<style lang="scss" scoped>
-    .icon {
-        position: absolute;
-        height: 80%;
-        width: 80%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: -1;
-        overflow: hidden;
-        opacity: 0.4;
-        filter: grayscale(0.4);
-        color: var(--color);
-    }
     .counter-wrapper {
-        margin: 0 0.25em;
+        margin: 0 calc(var(--gutter) / 2) var(--gutter);
+        display: flex;
+        flex-direction: column;
+        flex: 1 1;
+        justify-content: center;
         
         > span {
             font-size: 0.75em;
             display: block;
             text-align: left;
             text-indent: 1em;
+            font-style: italic;
         }
-    }
 
-    .counter {
-        padding-top: 0.5em;
-        display: flex;
-        flex-flow: row wrap;
-        font-size: 1em;
-        align-items: center;
-        font-family: 'Pirata One', 'Grenze', Helvetica, Arial, sans-serif;
+        .counter {
+            display: flex;
+            flex-flow: row wrap;
+            font-size: 1em;
+            align-items: center;
+            border-radius: 1em;
+            background: var(--c);
+            overflow: hidden;
+            justify-content: center;
 
-        .amount {
-            height: 2em;
-            width: 2em;
-            color: #222;
-            border-radius: 50%;
-            // box-shadow: 
-            //     0 0 0px 2px rgba(0,0,0,1),
-            //     inset 0 1.5px 0 1px rgba(0,0,0,.15),
-            //     inset 0 -6px 0 1px #fff;
-            // box-shadow: 
-            //     inset 0 0 0 2px #fff;
-            border: 1px solid #fff;
+            .amount {
+                height: 100%;
+                // color: #f5f5f5;
+                // text-shadow: .15vw .15vw #333;
+                display: flex;
+                justify-content: center;
+                align-items: flex-end;
+                position: relative;
+                z-index: 3;
+                overflow: visible;
+                flex-direction: row;
+                border-left: 1px solid #000;
+                border-right: 1px solid #000;
+                font-style: italic;
+                flex-grow: 1;
+                background: #f5f5f5;
+                // padding-bottom: .5em;
+                // line-height: .9;
+
+                .icon {
+                    height: .8em;
+
+                    svg {
+                        height: 100%;
+                    }
+
+                    &::after {
+                        display: inline-block;
+                        content: '';
+                        transform: translateY(-.1em);
+                        padding: 0 .25em;
+                    }
+                }
+
+                .value {
+                    font-size: 1em;
+                    // background: #fff;
+                    color: #333;
+                    height: 100%;
+                    margin-left: auto;
+                    width: 2.5em;
+                    border-left: 1px solid #000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    
+                }
+
+                .title {
+                    height: 100%;
+                    font-size: .8em;
+                    font-style: italic;
+                    color: #333;
+                    margin-right: 0.2em;
+                    margin-left: auto;
+                    display: flex;
+                    align-items: center;
+
+                    // &::after {
+                    //     content: ':';
+                    // }
+                }
+            }
+        }
+
+        .btn {
+            background: #fff;
+            color: #fff;
+            width: 2.3em;
+            // height: 2em;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #fff;
+            background: var(--c);
+            // padding: 0.5em;
             position: relative;
-            z-index: 3;
+            z-index: 2;
             overflow: hidden;
 
-            span {
-                font-size: 1.2em;
-                text-shadow: 1px 1px rgba(255,255,255,.8);
-                // transform: translateY(-0.13em);
-            }
-        }
-    }
-
-    .btn {
-        padding: 0.25em;
-        background: #fff;
-        color: #fff;
-        width: 2.3em;
-        height: 1.9em;
-        display: flex;
-        align-items: center;
-        background: var(--color);
-        padding: 0.5em;
-        position: relative;
-        z-index: 2;
-        overflow: hidden;
-
-        &::before {
-            color: transparent;
-            transform: translateY(-0.05em);
-            font-size: 1.75em;
-            text-shadow: 0 0 0 #fff, 1px 1px rgba(0,0,0,0.2);
-        }
-
-        &.decrement {
-            border-radius: 0.95em 0 0 0.95em;
-            justify-content: flex-start;
-            margin-right: -0.75em;
-
             &::before {
-                content: '-';
+                color: #f5f5f5;
+                transform: translateY(-0.1em);
+                font-size: 1.5em;
+                // text-shadow: 0 0 0 #fff, 1px 1px rgba(0,0,0,0.2);
             }
-            // box-shadow: inset 1px 1px 0 1px rgba(0,0,0,.2);
-        }
 
-        &.increment {
-            border-radius: 0 0.95em 0.95em 0;
-            justify-content: flex-end;
-            margin-left: -0.75em;
+            &.decrement {
+                // border-radius: 1em 0 0 1em;
 
-            &::before {
-                content: '+';
+                &::before {
+                    content: '-';
+                }
+                // box-shadow: inset 1px 1px 0 1px rgba(0,0,0,.2);
             }
-            // box-shadow: inset -1px 1px 0 1px rgba(0,0,0,.2);
+
+            &.increment {
+                // border-radius: 0 1em 1em 0;
+
+                &::before {
+                    content: '+';
+                }
+                // box-shadow: inset -1px 1px 0 1px rgba(0,0,0,.2);
+            }
         }
     }
 </style>

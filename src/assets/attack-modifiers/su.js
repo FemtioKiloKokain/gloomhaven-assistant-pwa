@@ -1,11 +1,11 @@
-const icon = require('@/assets/character-icons/summoner.svg')
-const wound = require('@/assets/status-icons/wound.svg')
-const poison = require('@/assets/status-icons/poison.svg')
-const heal = require('@/assets/heal-self.svg')
-const fire = require('@/assets/element-icons/fire.svg')
-const air = require('@/assets/element-icons/air.svg')
-const dark = require('@/assets/element-icons/dark.svg')
-const leaf = require('@/assets/element-icons/leaf.svg')
+const icon = require('@/assets/character-icons/summoner.svg');
+const wound = require('@/assets/status-icons/wound.svg');
+const poison = require('@/assets/status-icons/poison.svg');
+const heal = require('@/assets/heal-self.svg');
+const fire = require('@/assets/element-icons/fire.svg');
+const air = require('@/assets/element-icons/air.svg');
+const dark = require('@/assets/element-icons/dark.svg');
+const leaf = require('@/assets/element-icons/leaf.svg');
 
 export default [
     {
@@ -16,6 +16,7 @@ export default [
         content: '+1',
         variant: 'standard',
         description: 'Attack <em>+1</em>',
+        image: 'attack-modifiers/SU/am-su-01.png',
         icon
     },
     {
@@ -26,6 +27,7 @@ export default [
         content: '+1',
         variant: 'standard',
         description: 'Attack <em>+1</em>',
+        image: 'attack-modifiers/SU/am-su-02.png',
         icon
     },
     {
@@ -36,6 +38,7 @@ export default [
         content: '+2',
         variant: 'standard',
         description: 'Attack <em>+2</em>',
+        image: 'attack-modifiers/SU/am-su-03.png',
         icon
     },
     {
@@ -46,6 +49,7 @@ export default [
         content: '+2',
         variant: 'standard',
         description: 'Attack <em>+1</em>',
+        image: 'attack-modifiers/SU/am-su-04.png',
         icon
     },
     {
@@ -55,7 +59,9 @@ export default [
         colorHex: '#e15811',
         content: wound,
         variant: 'status',
-        description: 'Attack has <em>Wound</em>, <em>Reroll</em>',
+        description: '<em>Wound</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-05.png',
+        roll: true,
         icon
     },
     {
@@ -65,7 +71,9 @@ export default [
         colorHex: '#e15811',
         content: wound,
         variant: 'status',
-        description: 'Attack has <em>Wound</em>, <em>Reroll</em>',
+        description: '<em>Wound</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-06.png',
+        roll: true,
         icon
     },
     {
@@ -75,7 +83,9 @@ export default [
         colorHex: '#848366',
         content: poison,
         variant: 'status',
-        description: 'Attack has <em>Poison</em>, <em>Reroll</em>',
+        description: '<em>Poison</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-07.png',
+        roll: true,
         icon
     },
     {
@@ -85,7 +95,9 @@ export default [
         colorHex: '#848366',
         content: poison,
         variant: 'status',
-        description: 'Attack has <em>Poison</em>, <em>Reroll</em>',
+        description: '<em>Poison</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-08.png',
+        roll: true,
         icon
     },
     {
@@ -95,7 +107,9 @@ export default [
         colorHex: '#a26c47',
         content: heal,
         variant: 'status',
-        description: '<em>Heal 1</em>, <em>Reroll</em>',
+        description: '<em>Heal 1</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-09.png',
+        roll: true,
         icon
     },
     {
@@ -105,7 +119,9 @@ export default [
         colorHex: '#a26c47',
         content: heal,
         variant: 'status',
-        description: '<em>Heal 1</em>, <em>Reroll</em>',
+        description: '<em>Heal 1</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-10.png',
+        roll: true,
         icon
     },
     {
@@ -115,7 +131,9 @@ export default [
         colorHex: '#a26c47',
         content: heal,
         variant: 'status',
-        description: '<em>Heal 1</em>, <em>Reroll</em>',
+        description: '<em>Heal 1</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-11.png',
+        roll: true,
         icon
     },
     {
@@ -125,7 +143,9 @@ export default [
         colorHex: '#a26c47',
         content: heal,
         variant: 'status',
-        description: '<em>Heal 1</em>, <em>Reroll</em>',
+        description: '<em>Heal 1</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-12.png',
+        roll: true,
         icon
     },
     {
@@ -135,7 +155,9 @@ export default [
         colorHex: '#a26c47',
         content: heal,
         variant: 'status',
-        description: '<em>Heal 1</em>, <em>Reroll</em>',
+        description: '<em>Heal 1</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-13.png',
+        roll: true,
         icon
     },
     {
@@ -145,7 +167,9 @@ export default [
         colorHex: '#a26c47',
         content: heal,
         variant: 'status',
-        description: '<em>Heal 1</em>, <em>Reroll</em>',
+        description: '<em>Heal 1</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-14.png',
+        roll: true,
         icon
     },
     {
@@ -155,7 +179,9 @@ export default [
         colorHex: '#f55c1f',
         content: fire,
         variant: 'element',
-        description: 'Create <em>Fire</em>, <em>Reroll</em>',
+        description: 'Create <em>Fire</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-15.png',
+        roll: true,
         icon
     },
     {
@@ -165,7 +191,9 @@ export default [
         colorHex: '#a1b0a6',
         content: air,
         variant: 'element',
-        description: 'Create <em>Air</em>, <em>Reroll</em>',
+        description: 'Create <em>Air</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-16.png',
+        roll: true,
         icon
     },
     {
@@ -175,7 +203,9 @@ export default [
         colorHex: '#34312e',
         content: dark,
         variant: 'element',
-        description: 'Create <em>Dark</em>, <em>Reroll</em>',
+        description: 'Create <em>Dark</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-17.png',
+        roll: true,
         icon
     },
     {
@@ -185,7 +215,9 @@ export default [
         colorHex: '#a1a83d',
         content: leaf,
         variant: 'element',
-        description: 'Create <em>Leaf</em>, <em>Reroll</em>',
+        description: 'Create <em>Leaf</em>, <em>Roll</em>',
+        image: 'attack-modifiers/SU/am-su-18.png',
+        roll: true,
         icon
     },
     {
@@ -196,6 +228,7 @@ export default [
         content: '+0',
         variant: 'standard',
         description: 'Attack <em>+0</em>',
+        image: 'attack-modifiers/SU/am-su-19.png',
         icon
     },
     {
@@ -206,6 +239,7 @@ export default [
         content: '+1',
         variant: 'standard',
         description: 'Attack <em>+1</em>',
+        image: 'attack-modifiers/SU/am-su-20.png',
         icon
     },
     {
@@ -216,6 +250,7 @@ export default [
         content: '+1',
         variant: 'standard',
         description: 'Attack <em>+1</em>',
+        image: 'attack-modifiers/SU/am-su-21.png',
         icon
     },
     {
@@ -226,6 +261,7 @@ export default [
         content: '+1',
         variant: 'standard',
         description: 'Attack <em>+1</em>',
+        image: 'attack-modifiers/SU/am-su-22.png',
         icon
     }
 ];

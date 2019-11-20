@@ -4,47 +4,51 @@
             class="am-card"
             :class="{'no-cards': !drawnCards}"
             ref="card"
-            @click="draw"
+            @click="flipCard()"
         >
-            <div class="card-front" :style="bgStyle">
+            <div
+                v-if="uiStyle === 'traditional'" 
+                class="image-front traditional">
+
+                <div
+                    v-for="(card, i) in drawnCards"
+                    :key="i"
+                    :class="['image-card', card.variant]">
+
+                    <img :src="require(`@/assets/gloomhaven/images/${card.image}`)">
+                </div>
+            </div>
+            <div 
+                v-else
+                class="card-front" 
+                :style="bgStyle">
                 <div
                     v-for="(card, i) in drawnCards"
                     :key="i"
                     ref="cardFront"
                     :class="['card', card.variant]"
+                    :val="(card.variant === 'standard' ? card.content : '')"
+                    :style="{'--c': card.colorHex}"
                 >
-                    <div class="extra"></div>
-
-                    <div class="coin">
-                        <div ref="coin" class="coin-inner">
-                            <span
-                                ref="front"
-                                class="keep-svg-style coin-front"
-                                v-html="card.content"
-                            />
-
-                            <span
-                                ref="back"
-                                class="coin-back"
-                                v-html="require('@/assets/attack.svg')"
-                            />
-                        </div>
+                    <div 
+                        v-if="card.status"
+                        class="extra keep-svg-style" 
+                        v-html="card.status">
                     </div>
-
-                    <div class="roll">
-                        <icon 
-                            v-if="card.roll"
-                            name="roll"
-                            icon-style="no-outline" />
-                    </div>
+                    <coin class="coin" :card="card" :double="drawnCards.length === 2"/>
+                    <div 
+                        v-if="card.roll"
+                        class="roll keep-svg-style" 
+                        v-html="require('@/assets/status-icons/roll.svg')" />
 
                     <span class="card-icon" v-html="card.icon" />
                 </div>
             </div>
+            
             <div class="card-back" v-html="require('@/assets/attack.svg')" />
         </div>
         <div class="am-card-toolbar">
-            <ripple ref="double" class="double" @click.native="drawDouble">
+            <ripple ref="double" class="double" @click.native="flipCard(true)">
                 Draw two
                 <!-- <icon name="strengthen" iconstyle="flat" />
                 <icon name="muddle" iconstyle="flat" /> -->
@@ -61,6 +65,7 @@
 </template>
 
 <script>
+import Coin from '@/components/Coin'
 import Ripple from '@/components/UI/Ripple';
 import Icon from '@/components/UI/Icon';
 import { TimelineMax } from 'gsap';
@@ -68,65 +73,34 @@ import { TimelineMax } from 'gsap';
 export default {
     name: 'am-card',
     components: {
+        Coin,
         Ripple,
         Icon
     },
     computed: {
-        drawnCards: ({ $store }) => {
-            const drawnCards = $store.state.drawnCards;
-            return drawnCards[drawnCards.length - 1];
-        },
-        bgStyle: function() {
-            const cards = this.drawnCards 
-            
+        uiStyle: ({ $store }) => $store.state.uiStyle,
+        drawnCards: ({ $store }) => $store.state.drawnCards.slice(-1)[0],
+        bgStyle: ({ drawnCards }) => {            
             return {
-                '--bg1': cards ? cards[0].colorHex : '#000',
-                '--bg2': cards ? cards[cards.length - 1].colorHex : '#000'
+                '--bg1': drawnCards ? drawnCards[0].colorHex : '#000',
+                '--bg2': drawnCards ? drawnCards[drawnCards.length - 1].colorHex : '#000'
             }
         }
     },
     methods: {
-        flipCard: function(double) {
+        flipCard: function(double = false) {
             const draw = () => this.$store.dispatch('drawCard', double);
             const card = this.$refs.card;
             const eventTarget = [this.$refs.double.$el, card];
             const timeline = new TimelineMax();
-            const firstFlip = this.drawnCards ? .5 : 0
+            const firstFlip = this.drawnCards ? .3 : 0
 
             timeline
                 .set(eventTarget, { pointerEvents: 'none' })
                 .to(card, firstFlip, { rotationX: '180_cw' })
                 .call(draw)
-                .to(card, 0.5, { rotationX: '0_cw', delay: .1 })
+                .to(card, 0.5, { rotationX: '0_cw', delay: .15 })
                 .set(eventTarget, { pointerEvents: '' });
-        },
-        flipCoin: function(double) {
-            const draw = () => this.$store.dispatch('drawCard', double);
-            const coins = this.$refs.coin;
-            const timeline = new TimelineMax();
-
-            timeline
-                .to(coins, 0.5, { rotationY: '180_ccw' })
-                .call(draw)
-                .to(coins, 0.5, { rotationY: '0_ccw' });
-        },
-        draw() {
-            if (!this.drawnCards) {
-                this.flipCard(false);
-                return;
-            }
-
-            if (this.$refs.coin.length === 1) this.flipCard(false);
-            else this.flipCard(false);
-        },
-        drawDouble() {
-            if (!this.drawnCards) {
-                this.flipCard(true);
-                return;
-            }
-
-            if (this.$refs.coin.length === 2) this.flipCard(true);
-            else this.flipCard(true);
         }
     }
 };
@@ -156,8 +130,21 @@ export default {
         transform: rotateX(180deg) !important;
     }
 
+    .image-front {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        border-radius: var(--border-radius);
+        display: flex;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
     .card-front {
-        backface-visibility: hidden;
         position: absolute;
         top: 0;
         left: 0;
@@ -167,7 +154,6 @@ export default {
         background-image: url('https://di-uploads-pod6.dealerinspire.com/kelownatoyota/uploads/2016/12/geometric-bg-1.png');
         background-blend-mode: multiply;
         background-position: center center;
-        transition: background-color 0.5s;
         overflow: hidden;
         border-radius: var(--border-radius);
         z-index: 1;
@@ -186,8 +172,11 @@ export default {
             background-image: url('https://di-uploads-pod6.dealerinspire.com/kelownatoyota/uploads/2016/12/geometric-bg-1.png');
             background-blend-mode: multiply;
             background-position: center center;
-            transition: background-color 0.5s;
             z-index: 0;
+        }
+
+        &.traditional::before {
+            display: none;
         }
     }
 
@@ -214,6 +203,13 @@ export default {
             height: 55%;
             width: auto;
             z-index: 1;
+        }
+
+        img {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         &::before {
@@ -245,29 +241,43 @@ export default {
         backface-visibility: hidden;
         z-index: 200;
         flex-flow: row wrap;
-        padding: 5%;
+        padding: 5% 2%;
+
+        .coin {
+            font-size: 27.5vw;
+        }
 
         .card-icon {
-            width: 7.5%;
-            color: #fff;
+            width: 8.75vw;
+            height: 8.75vw;
+            color: transparent;
             border-radius: 50%;
             position: absolute;
-            left: 5%;
-            bottom: 4vw;
-            filter: drop-shadow(0.25vw 0.25vw 0.5vw rgba(0, 0, 0, 0.2));
-
-            &::before {
-                content: '';
-                display: block;
-                padding-top: 100%;
-            }
+            left: 3.25vw;
+            bottom: 3vw;
+            filter: drop-shadow(0.2vw 0.2vw 0.2vw rgba(0, 0, 0, 0.2));
+            display: flex;
+            align-items: center;
+            padding: 1.25vw;
+            background: #fff;
+            // color: var(--c);
+            color: #333;
+            box-shadow: 
+                inset 0 0 .1vw #fff,
+                0 0 0 .2vw #fff;
 
             svg {
                 width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
+            }
+        }
+
+        &.bless,
+        &.curse {
+            .card-icon {
+                background: transparent;
+                box-shadow: none;
+                width: 9.5vw;
+                height: 9.5vw;
             }
         }
 
@@ -277,18 +287,15 @@ export default {
 
         &:not(:only-child) {
             height: 56%;
+            padding: 5%;
 
             .coin {
                 transform: scale(0.7);
             }
 
-            .extra,
-            .roll {
-                padding: 0 0;
-
-                &:empty {
-                    display: none;
-                }
+            .roll,
+            .extra {
+                transform: translateY(0);
             }
 
             &:first-child {
@@ -296,8 +303,8 @@ export default {
                 justify-content: flex-start;
 
                 .card-icon {
-                    top: 4vw;
-                    right: 5%;
+                    top: 3vw;
+                    right: 4%;
                     left: auto;
                     bottom: auto;
                 }
@@ -307,9 +314,16 @@ export default {
                     margin: 0 -3% -4% -6%;
                 }
 
-                .extra,
+                .extra {
+                    top: 3vw;
+                    left: 36%;
+                }
+
                 .roll {
-                    order: 2;
+                    right: auto;
+                    bottom: auto;
+                    left: 36%;
+                    top: 0;
                 }
             }
 
@@ -322,100 +336,26 @@ export default {
                     margin: 0 -6% 4% -3%;
                 }
 
-                .extra,
-                .roll {
-                    order: 1;
+                .extra {
+                    top: auto;
+                    left: auto;
+                    bottom: 2.5vw;
+                    right: 36%;
                 }
-            }
-        }
-    }
 
-    .coin {
-        display: inline-block;
-        position: relative;
-        transform-style: preserve-3d;
-        overflow: visible;
-        display: flex;
-        justify-content: center;
-        flex-basis: 47%;
-        margin: 4.5%;
-
-        &::before {
-            content: '';
-            display: block;
-            padding-top: 100%;
-        }
-    }
-
-    .coin-inner {
-        display: inline-block;
-        position: relative;
-        transform-style: preserve-3d;
-        overflow: visible;
-        display: flex;
-        justify-content: center;
-        width: 100%;
-
-        &::before {
-            content: '';
-            display: block;
-            padding-top: 100%;
-            width: 100%;
-            background: #fff;
-            z-index: 0;
-            border-radius: 50%;
-            transform: translateZ(-2px);
-            box-shadow: inset 0 2vw 1vw rgba(0, 0, 0, 0.2),
-                inset 0 -2vw 1vw rgba(0, 0, 0, 0.2);
-        }
-
-        span {
-            font-size: 25vw;
-            background: #fff;
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #222;
-            backface-visibility: hidden;
-            border-radius: 50%;
-            box-shadow: inset 0 0 4vw rgba(255, 255, 255, 0.3),
-                0 2vw 3vw -2vw rgba(0, 0, 0, 0.4);
-        }
-
-        svg {
-            height: 100%;
-            width: 100%;
-        }
-
-        .coin-front {
-            transform: translateZ(0px);
-            z-index: 3;
-        }
-
-        .coin-back {
-            transform: translateZ(-4px) rotateX(180deg) rotateZ(180deg);
-            background: #fff;
-            z-index: 1;
-
-            svg {
-                height: 50%;
-                width: 50%;
+                .roll {
+                    right: 36%;
+                    bottom: 0;
+                }
             }
         }
     }
 
     .extra,
     .roll {
-        flex-basis: 21%;
-        display: flex;
-        flex-flow: row wrap;
-        align-items: center;
-        filter: drop-shadow(0 2px 3px rgba(0,0,0,.15));
+        width: 25%;
+        position: absolute;
+        filter: drop-shadow(0 .4vw .4vw rgba(0,0,0,.075));
 
         svg {
             width: 100%;
@@ -423,26 +363,27 @@ export default {
             display: inline-block;
         }
 
-        path:first-child + path {
-            display: none;
-        }
+        // svg path:first-of-type,
+        // svg path:first-of-type + path {
+        //     display: none;
+        // }
     }
 
-    // .extra {
-    //     padding-top: 19%;
-    // }
+    .extra {
+        left: 2.5vw;
+        top: 50%;
+        transform: translateY(-75%);
+    }
 
     .roll {
-        padding-top: 5%;
-    }
-
-    &.standard .card-effect span {
-        text-indent: -0.1em;
+        right: 2.5vw;
+        bottom: 50%;
+        transform: translateY(75%);
     }
 }
 
 .am-card-toolbar {
-    padding: 0.5em 0;
+    padding: var(--gutter) 0;
     display: flex;
     justify-content: flex-start;
 
@@ -459,8 +400,9 @@ export default {
         background-image: url('https://di-uploads-pod6.dealerinspire.com/kelownatoyota/uploads/2016/12/geometric-bg-1.png');
         background-blend-mode: multiply;
         background-position: center center;
-        margin-right: 0.5em;
+        margin-right: var(--gutter);
         padding: 0 1em;
+        font-style: italic;
 
         * {
             pointer-events: none;
@@ -539,6 +481,26 @@ export default {
         em {
             position: relative;
         }
+    }
+}
+
+.traditional {
+    .image-card {
+        flex: 1 1 auto;
+    }
+
+    .card-back::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('~@/assets/images/attack_mod_back.jpg');
+        z-index: 10;
+        background-size: cover;
+        background-position: center center;
     }
 }
 </style>

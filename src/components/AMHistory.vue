@@ -5,22 +5,59 @@
                 class="icon-holder" 
                 @click="$store.dispatch('shuffleDeck')"
                 :should-shuffle="$store.state.shouldShuffle">
-                <icon name="history" iconstyle="flat"></icon>
-                <span>History</span>
+                <!-- <span class="icon" v-html="require('@/assets/general-icons/deck.svg')" /> -->
+                <span class="icon" v-html="require('@/assets/general-icons/shuffle.svg')" />
+                <!-- <icon name="history" iconstyle="flat"></icon> -->
+                <!-- <span v-text="$store.state.shouldShuffle ? 'Shuffle' : 'History'"></span> -->
             </div>
             <transition-group 
+                v-if="uiStyle === 'traditional'"
                 class="scroll-wrapper"
                 name="history-card" 
                 tag="div">
 
                 <div 
-                    v-for="card in cards"
-                    class="card"
-                    :key="card.name"
-                    :style="{'--color': card.colorHex}">
+                    class="card-holder"
+                    v-for="cards in history"
+                    :key="cards[0].name">
 
-                    <div class="coin">
-                        <div class="coin-inner keep-svg-style" v-html="card.content" />
+                    <div 
+                        class="card"
+                        v-for="card in cards"
+                        :key="card.name">
+
+                        <img :src="require(`@/assets/gloomhaven/images/${card.image}`)">
+                    </div>
+                </div>
+            </transition-group>
+            <transition-group 
+                v-else
+                class="scroll-wrapper"
+                name="history-card" 
+                tag="div">
+
+                <div 
+                    class="card-holder"
+                    v-for="cards in history"
+                    :key="cards[0].name">
+
+                    <div 
+                        v-for="card in cards"
+                        class="card"
+                        :key="card.name"
+                        :style="{'--cardColor': card.colorHex}">
+
+                        <div 
+                            v-if="card.status" 
+                            class="extra keep-svg-style" 
+                            v-html="card.status" />
+
+                        <coin class="coin" :card="card" />
+
+                        <div 
+                            v-if="card.roll" 
+                            class="extra keep-svg-style" 
+                            v-html="require('@/assets/status-icons/roll.svg')" />
                     </div>
                 </div>
             </transition-group>
@@ -28,26 +65,50 @@
     </div>
 </template>
 <script>
+import Coin from '@/components/Coin'
 import Icon from '@/components/UI/Icon'
 
 export default {
     name: 'am-history',
     components: {
+        Coin,
         Icon
     },
     computed: {
-        cards: ({$store}) => {
+        uiStyle: ({$store}) => $store.state.uiStyle,
+        character: ({$store}) => $store.state.character,
+        history: ({$store}) => {
             let cards = [...$store.state.drawnCards]
             cards = cards.slice(0, cards.length - 1)
-            return cards.flat().reverse()
+            return cards.reverse()
+        },
+        content: () => {
+            return card => {
+                if(card.variant === 'bless' || card.variant === 'curse') {
+                    return card.icon
+                }
+
+                return card.content
+            }
+        },
+        cardStyle: () => {
+            return card => {
+                return {
+                    '--cardColor': card.colorHex,
+                    '--width': `${20 * card.length}%`
+                }
+            }
         }
     }
 }
 </script>
 <style lang="scss">
     @keyframes spin { 
-        0% { transform: translateY(-5%) rotate(0deg);}
-        100% { transform: translateY(-5%) rotate(-360deg);}
+        0% { transform: scale(1) rotate(0deg);}
+        25% { transform: scale(1.25) rotate(90deg);}
+        50% { transform: scale(1) rotate(180deg);}
+        75% { transform: scale(1.25) rotate(270deg);}
+        100% { transform: scale(1) rotate(360deg);}
     }
     .history-card-enter {
         transform: translateX(calc(-100% - 7px));
@@ -78,32 +139,37 @@ export default {
 
     .history-wrapper {
         width: 100%;
-        overflow: hidden;
     }
     
     .history {
         height: 100%;
         position: relative;
-        padding-left: calc(100% / 6);
-        overflow: hidden;
-        padding-bottom: 7px;
+        padding-left: calc((100vw - var(--gutter) * 2) / 6);
+        padding-bottom: var(--gutter);
         width: 100%;
-        height: 11vw;
+        height: 11.5vw;
+        z-index: 1;
 
         .icon-holder {
-            height: calc(100% - 7px);
-            width: calc(100% / 6 - 7px);
+            height: 20%;
+            width: calc((100vw - var(--gutter) * 2) / 6 - var(--gutter));
             position: absolute;
             left: 0;
             z-index: 1;
             background: #000;
             color: #fff;
-            box-shadow: 0 0 7px rgba(0,0,0,1);
+            // box-shadow: 0 0 7px rgba(0,0,0,1);
             display: flex;
             flex-direction: column;
-            font-size: .8em;
-            padding-top: .25em;
-            line-height: 1.3;
+            font-size: .7em;
+            // padding-top: .25em;
+            line-height: 1;
+            z-index: 3;
+            // margin-top: -.75vw;
+            overflow: hidden;
+            height: 100%;
+            justify-content: center;
+            padding-bottom: 2%;
 
             span {
                 display: flex;
@@ -112,23 +178,44 @@ export default {
                 perspective: 1000px;
             }
 
-            svg {
-                width: 37%;
+            .icon {
+                width: 100%;
                 overflow: visible;
+                position: absolute;
+                // top: 14%;
+                // left: 2%;
+
+                svg {
+                    width: 60%;
+                }
+
+                + .icon {
+                    position: absolute;
+                    width: 60%;
+                    height: 100%;
+                    // color: var(--color);
+                    left: 52%;
+                    transform: translate(-50%, -33%);
+                    filter: drop-shadow(0 0 .025vw #000);
+
+                    svg path {
+                        stroke: #000;
+                        stroke-width: 1.5vw;
+                        // stroke-linecap: round;
+                        paint-order: stroke;
+                        // stroke-linejoin: round;
+                        
+                    }
+
+                    // svg {
+                    //     fill:  !important;
+                    // }
+                }
             }
 
-            &[should-shuffle] svg {
-                path {
-                    transform-origin: 54% 55.5%;
-                    animation: spin 3s linear infinite;
-                    stroke: #000;
-                    stroke-width: 2px;
-                    stroke-linecap: round;
-                    paint-order: stroke;
-                    stroke-linejoin: round;
-                    z-index: 2;
-                    position: relative;
-                }
+            &[should-shuffle] .icon svg {
+                color: var(--color);
+                animation: spin 3s linear infinite;
             }
         }
 
@@ -150,9 +237,11 @@ export default {
             display: flex;
             flex-flow: row;
             justify-content: flex-start;
-            margin-left: -7px;
+            // padding-right: var(--gutter);
+            margin-left: calc(var(--gutter) * -1);
             overflow: scroll;
-            border-radius: 2vw;
+            border-radius: 1vw;
+            position: relative;
             scrollbar-width: none;
 
             &::-webkit-scrollbar {
@@ -160,11 +249,13 @@ export default {
             }
         }
 
+        .card-holder {
+            display: flex;
+        }
+
         .card {
-            background: var(--color);
-            margin-left: 7px;
-            border-radius: 2vw;
-            width: calc(20% - 7px);
+            background: var(--cardColor);
+            border-radius: 1vw;
             flex: 0 0 auto;
             height: 100%;
             font-family: 'Pirata One';
@@ -172,45 +263,35 @@ export default {
             justify-content: center;
             align-items: center;
             padding: 0.5vw 0;
+            position: relative;
+            z-index: -1;
+            opacity: .9;
+            width: calc((100vw - var(--gutter) * 2) / 6 - var(--gutter) * 1);
+            margin-right: var(--gutter);
+        }
 
-            .coin {
-                display: inline-block;
-                position: relative;
-                transform-style: preserve-3d;
-                overflow: visible;
-                display: flex;
-                justify-content: center;
-                flex-basis: 52%;
-                margin: 4.5%;
-                font-size: 1.1em;
+        .extra {
+            width: 18%;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin: 1.25vw;
 
-                &::before {
-                    content: '';
-                    display: block;
-                    padding-top: 100%;
-                }
-                
-                .coin-inner {
-                    display: inline-block;
-                    position: relative;
-                    transform-style: preserve-3d;
-                    overflow: visible;
-                    display: flex;
-                    justify-content: center;
-                    width: 100%;
-                    background: #fff;
-                    border-radius: 50%;
-                    color: #333;
-                    display: flex;
-                    align-items: center;
-                    line-height: 0;
-                }
-
-                svg {
-                    height: 100%;
-                    width: 100%;
-                }
+            svg {
+                width: 100%;
+                transform: scale(2);
             }
+        }
+
+        img {
+            border-radius: 1vw;
+            width: 100%;
+        }
+    }
+
+    .traditional .history-wrapper {
+        .scroll-wrapper {
+            border-radius: 1vw;
         }
     }
 </style>

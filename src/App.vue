@@ -1,68 +1,47 @@
 <template>
-    <div id="app" :style="style">
-        <div class="page">
-            <!-- <div 
-                v-if="character"
-                v-html="character.icon"
-                class="page-background" /> -->
-                
-            <transition name="page">
-                <router-view v-if="initialized"/>
-            </transition>
+    <section 
+        id="app" 
+        ref="test" 
+        :style="style"
+        :class="[$store.state.uiStyle]">
+
+        <div class="site-swipe">
+            <attack-modifier id="attack"/>
+            <modify-deck id="deck" />
         </div>
 
-        <!-- <div class="menu">
-            <nav>
-                <router-link :to="{name: 'Attack'}">
-                    <div v-html="require('@/assets/attack.svg')" />
-                </router-link>
-                <router-link :to="{name: 'Deck'}">
-                    <div v-html="require('@/assets/deck2.svg')" />
-                </router-link>
-                <router-link :to="{name: 'Profile'}" class="character-icon">
-                    <div 
-                        v-if="character" 
-                        v-html="icon">
-                        
-                    </div>
-                    <div v-else>hej</div>
-                </router-link>
-            </nav>
-        </div> -->
-    </div>
+        <nav>
+            <a href="#attack" v-html="require('@/assets/general-icons/attack.svg')"></a>
+            <a href="#deck" v-html="require('@/assets/general-icons/deck.svg')"></a>
+        </nav>
+    </section>
 </template>
 
 <script>
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUser, faUsers, faSpinner } from '@fortawesome/free-solid-svg-icons'
-
-library.add(faUser, faUsers, faSpinner)
+import AttackModifier from '@/components/AttackModifier'
+import ModifyDeck from '@/components/ModifyDeck'
 
 export default {
-    data() {
-        return {
-            initialized: true
-        }
+    components: {
+        AttackModifier,
+        ModifyDeck
     },
     computed: {
-        character: ({$store}) => $store.state.character,
-        loading: ({$store}) => $store.state.loading,
-        style: ({character}) => {
-            const color = character ? character.color : '#fff'
-
+        style: ({$store}) => {
+            const color = $store.state.character ? $store.state.character.color : '#fff'
+                
             return {
                 '--color': color
             }
         },
-        icon: ({character}) => character
-            ? character.icon
-            : ''
-    },
-    async beforeCreate() {
-        // await this.$store.restored
-
-        // this.$store.dispatch('initialize')
-        //     .then(() => this.initialized = true )
+        chosenCharacter: ({ $store }) => {
+            if (!$store.state.character) return {
+                name: 'Choose character',
+                color: '#000'
+            } 
+            
+            return $store.state.character
+        }
     }
 }
 </script>
@@ -70,6 +49,7 @@ export default {
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Pirata+One&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Grenze&display=swap');
+@import url('~@/assets/dm.css');
 
 html,
 body {
@@ -78,10 +58,16 @@ body {
     overflow: hidden;
     width: 100%;
     height: 100%;
+    font-size: 3.75vw;
 
     * {
         box-sizing: border-box;
     }
+}
+
+body {
+    background: #000;
+    perspective: 300px;
 }
 
 #app {
@@ -92,42 +78,90 @@ body {
 
     --border-radius: 5%/7.25%;
 
-    font-family: 'Dank Mono', 'Grenze', Helvetica, Arial, sans-serif;
+    --gutter: 2vw;
+
+    font-family: 'dm', 'Grenze', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     height: 100%;
     text-align: center;
     color: #d7d7d7;
     width: 100%;
+    max-width: 100vw;
     height: 100%;
-    background: #000;
-    padding: 14px;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 1fr 12.5vw;
+    overflow: hidden;
 
+    .site-swipe {
+        width: 100%;
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: 100% 100%;
+        grid-template-rows: 100%;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        scroll-behavior:smooth;
+        position: relative;
+
+        > section,
+        > div {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            padding: calc(var(--gutter) * 2);
+            max-height: 100%;
+            overflow: scroll;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+
+    nav {
+        font-size: 1.5em;
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        font-style: italic;        
+        background: #f2f2f2;
+        border-top: 1px solid #fff;
+        z-index: 1;
+        box-shadow: 0 0 3vw #333;
+
+        a {
+            line-height: 1em;
+            padding: 0em .2em;
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+            flex: 1 1 auto;
+            justify-content: center;
+
+            svg {
+                width: 10vw;
+            }
+
+            &:target {
+                color: red;
+            }
+        }
+    }
 
     h1,
     h2,
     h3,
     h4 {
         font-weight: 400;
-        font-family: 'Pirata One', 'Grenze', Helvetica
+        // font-family: 'Pirata One', 'Grenze', Helvetica
     }
 
     h2 {
         font-size: 2em;
-    }
-
-    .page-enter-active, 
-    .page-leave-active {
-        transition: opacity 0.33s, transform 0.33s;
-    }
-
-    .page-enter, 
-    .page-leave-to {
-        opacity: 0;
-        position: fixed;
-        transform: translateY(2.5%);
-        left: 0;
-        right: 0;
     }
 
     *:not(.keep-svg-style) > svg * {

@@ -1,66 +1,49 @@
 <template>
     <section class="am-wrapper">
-        <!-- <div class="history">
-            <div 
-                class="icon-holder"
-                @click="$store.dispatch('shuffleDeck')">
-
-                <icon v-if="shouldShuffle" icon="redo-alt"></icon>
-                <icon v-else icon="clock"></icon>
-            </div>
-            <div class="card-row-scroll">
-                <transition-group 
-                    class="card-row" 
-                    name="history-card" 
-                    tag="div">
-
-                    <div 
-                        class="history-card"
-                        v-for="(cards, index) in drawnCards"                        
-                        :key="index">
-                        
-                        <img 
-                            v-for="card in cards"
-                            :key="card.name"
-                            :double-card="card.double"
-                            :src="require(`@/assets/gloomhaven/images/${card.image}`)">
-                    </div>
-                </transition-group>
-            </div>
-        </div> -->
         <AMHistory />
         <AMCard />
-        <!-- <AMHistory class="history" /> -->
-        <!-- <div class="bless-curse">
-            <div class="bless">
-                <counter
-                    title="Bless"
-                    :value="$store.state.blesses.length"
-                    increment="blessDeck"
-                    decrement="unblessDeck"
-                    color="#d1a016"
-                    :icon="require('@/assets/bless.svg')"
-                    :iconStyle="{
-                        transform: 'translate(.1%,-3.5%)',
-                        width: '117%',
-                        height: '117%',
-                    }" />
-            </div>
-            <div class="curse">
-                <counter
-                    title="Curse"
-                    :value="$store.state.curses.length"
-                    increment="curseDeck"
-                    decrement="uncurseDeck"
-                    color="#7847a8"
-                    :icon="require('@/assets/curse.svg')"
-                    :iconStyle="{
-                        transform: 'translate(0,-8%)',
-                        width: '110%',
-                        height: '110%',
-                    }" />
-            </div>
-        </div> -->
+        <div class="counters">
+            <counter
+                title="Bless"
+                :value="$store.state.blesses.length"
+                increment="blessDeck" 
+                decrement="unblessDeck"
+                color="#d1a016"
+                :icon="require('@/assets/bless.svg')"/>
+            <counter
+                title="Curse"
+                :value="$store.state.curses.length"
+                increment="curseDeck" 
+                decrement="uncurseDeck"
+                color="#7847a8"/>
+        </div>
+        <div class="counters">
+            <counter
+                title="HP"
+                :value="$store.state.hp"
+                increment="increaseHp"
+                decrement="decreaseHp"
+                color="#e74342"
+                :icon="require('@/assets/hp.svg')"
+                :iconStyle="{
+                    transform: 'translate(40%,25%)',
+                    width: '110%',
+                    height: '110%',
+                }" />
+            <counter
+                title="EXP"
+                :value="$store.state.exp"
+                increment="increaseExp"
+                decrement="decreaseExp"
+                color="#3277ba"
+                :icon="require('@/assets/exp.svg')"
+                :iconStyle="{
+                    transform: 'translate(50%,25%)',
+                    width: '150%',
+                    height: '150%',
+                }" />
+        </div>
+        <status></status>
     </section>
 </template>
 
@@ -68,6 +51,7 @@
 import AMCard from '@/components/AMCard'
 import AMHistory from '@/components/AMHistory'
 import Counter from '@/components/Counter'
+import Status from '@/components/Status'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faClock, faRedoAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
@@ -78,13 +62,15 @@ export default {
     components: {
         AMCard,
         AMHistory,
-        Counter
+        Counter,
+        Status
     },
     computed: {
         drawnCards: ({$store}) => $store.state.drawnCards,
         blesses: ({$store}) => $store.state.blesses,
         curses: ({$store}) => $store.state.curses,
         shouldShuffle: ({$store}) => $store.state.shouldShuffle,
+        character: ({$store}) => $store.state.character
     }
 }
 </script>
@@ -94,4 +80,17 @@ export default {
     //     display: grid;
     //     grid-template-rows: 3em calc(56vw + 3em);
     // }
+
+    .counters {
+        font-size: 1.15em;
+        display: flex;
+        margin: calc(var(--gutter) / 2) calc(var(--gutter) / 2 * -1);
+        align-items: center;
+        justify-content: space-between;
+
+        .icon {
+            width: 8vw;
+            margin-right: var(--gutter);
+        }
+    }
 </style>
