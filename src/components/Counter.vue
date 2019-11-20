@@ -89,6 +89,7 @@ export default {
                 background: #f5f5f5;
                 // padding-bottom: .5em;
                 // line-height: .9;
+                line-height: 2em;
 
                 .icon {
                     height: .8em;

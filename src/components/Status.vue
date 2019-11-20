@@ -54,6 +54,7 @@ export default {
     display: flex;
     flex-flow: row wrap;
     margin: 0 calc(var(--gutter) * -1 / 2);
+    justify-content: flex-start;
 
     .status-effect {
         // width: calc(33.333% - var(--gutter));
@@ -93,6 +94,7 @@ export default {
             // margin: -1px 1vw -1px .5vw;
             transform: scale(1);
             margin-left: auto;
+            width: 2em;
         }
 
         &[data-active] {
