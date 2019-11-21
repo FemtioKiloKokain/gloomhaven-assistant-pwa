@@ -4,8 +4,7 @@ self.addEventListener('install', e => {
             return cache
                 .addAll([
                     './index.html',
-                    '/gloomhaven-assistant-pwa',
-                    '/gloomhaven-assistant-pwa/index.html'
+                    '/gloomhaven-assistant-pwa'
                 ])
                 .then(() => self.skipWaiting());
         })
