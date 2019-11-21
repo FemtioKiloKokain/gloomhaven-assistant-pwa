@@ -2,7 +2,12 @@ self.addEventListener('install', e => {
     e.waitUntil(
         caches.open('airhorner').then(cache => {
             return cache
-                .addAll(['/', './index.html'])
+                .addAll([
+                    '/',
+                    './index.html',
+                    '/gloomhaven-assistant-pwa',
+                    '/gloomhaven-assistant-pwa/index.html'
+                ])
                 .then(() => self.skipWaiting());
         })
     );
