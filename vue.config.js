@@ -1,6 +1,15 @@
 module.exports = {
     publicPath: 'gloomhaven-assistant-pwa',
     outputDir: 'docs',
+    pwa: {
+        // configure the workbox plugin
+        workboxPluginMode: 'InjectManifest',
+        workboxOptions: {
+            // swSrc is required in InjectManifest mode.
+            swSrc: 'public/service-worker.js',
+            // ...other Workbox options...
+        }
+    },
     chainWebpack: config => {
         // clear the existing images module
         const imagesRule = config.module.rule("images");
