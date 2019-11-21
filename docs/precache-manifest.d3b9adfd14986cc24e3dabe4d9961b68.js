@@ -3,7 +3,7 @@ self.__precacheManifest = [
     "url": "/gloomhaven-assistant-pwa/7ac0262862c7e1b4b922ffd510d5407e.png"
   },
   {
-    "revision": "f334a5f87859bc669c424273999a02a6",
+    "revision": "e8dfde133ff78c4e04bac1e21ea3feac",
     "url": "/gloomhaven-assistant-pwa/service-worker.js"
   },
   {
@@ -38,16 +38,16 @@ self.__precacheManifest = [
     "url": "/gloomhaven-assistant-pwa/js/chunk-da03765c.585d49fc.js"
   },
   {
-    "revision": "87f3bb1cfcccd9ca83c2",
-    "url": "/gloomhaven-assistant-pwa/js/chunk-vendors.390625c5.js"
-  },
-  {
-    "revision": "d82507a76a4869d9a2b0ce0d8e4cc2e2",
-    "url": "/gloomhaven-assistant-pwa/registerServiceWorker.js"
+    "revision": "ac91fbf5adcad29ac5f4",
+    "url": "/gloomhaven-assistant-pwa/js/chunk-vendors.dd312eb9.js"
   },
   {
     "revision": "b6216d61c03e6ce0c9aea6ca7808f7ca",
     "url": "/gloomhaven-assistant-pwa/robots.txt"
+  },
+  {
+    "revision": "d82507a76a4869d9a2b0ce0d8e4cc2e2",
+    "url": "/gloomhaven-assistant-pwa/registerServiceWorker.js"
   },
   {
     "revision": "1b5e9d511093e5030977",
@@ -57,11 +57,11 @@ self.__precacheManifest = [
     "url": "/gloomhaven-assistant-pwa/a5724764e898cd52372bacae85852f18.png"
   },
   {
-    "revision": "8bcd6da8e8afae53fb16",
+    "revision": "e5632c13959d16984af7",
     "url": "/gloomhaven-assistant-pwa/css/app.6a77d93f.css"
   },
   {
-    "revision": "ff03dfdbe9e893ab7bf29202880de718",
+    "revision": "f05a6db9c6919084c7778026a32958d8",
     "url": "/gloomhaven-assistant-pwa/index.html"
   },
   {
@@ -1163,8 +1163,8 @@ self.__precacheManifest = [
     "url": "/gloomhaven-assistant-pwa/f5c9722006a3ed2d7626d90b93e803d1.png"
   },
   {
-    "revision": "8bcd6da8e8afae53fb16",
-    "url": "/gloomhaven-assistant-pwa/js/app.94b26cfe.js"
+    "revision": "e5632c13959d16984af7",
+    "url": "/gloomhaven-assistant-pwa/js/app.a84fc035.js"
   },
   {
     "url": "/gloomhaven-assistant-pwa/e0fd02efbc27bae6db970a50a75e2058.png"
