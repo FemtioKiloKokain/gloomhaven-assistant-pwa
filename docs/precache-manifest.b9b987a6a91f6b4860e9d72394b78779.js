@@ -7,12 +7,12 @@ self.__precacheManifest = [
     "url": "/gloomhaven-assistant-pwa/registerServiceWorker.js"
   },
   {
-    "revision": "a070774bc490a13273f43e444e1379c5",
-    "url": "/gloomhaven-assistant-pwa/service-worker.js"
-  },
-  {
     "revision": "b6216d61c03e6ce0c9aea6ca7808f7ca",
     "url": "/gloomhaven-assistant-pwa/robots.txt"
+  },
+  {
+    "revision": "b490fa3315296aa10ca8dd16bde22244",
+    "url": "/gloomhaven-assistant-pwa/service-worker.js"
   },
   {
     "url": "/gloomhaven-assistant-pwa/aa140064b70aa1632d04fec99e0616ab.png"

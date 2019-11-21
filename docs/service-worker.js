@@ -1,4 +1,4 @@
-importScripts("/gloomhaven-assistant-pwa/precache-manifest.214f3e94016b9f28080b9152e393100b.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
+importScripts("/gloomhaven-assistant-pwa/precache-manifest.b9b987a6a91f6b4860e9d72394b78779.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 self.addEventListener('install', e => {
     e.waitUntil(
@@ -6,8 +6,7 @@ self.addEventListener('install', e => {
             return cache
                 .addAll([
                     './index.html',
-                    '/gloomhaven-assistant-pwa',
-                    '/gloomhaven-assistant-pwa/index.html'
+                    '/gloomhaven-assistant-pwa'
                 ])
                 .then(() => self.skipWaiting());
         })
