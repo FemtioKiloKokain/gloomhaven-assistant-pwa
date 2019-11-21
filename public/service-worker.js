@@ -3,7 +3,6 @@ self.addEventListener('install', e => {
         caches.open('airhorner').then(cache => {
             return cache
                 .addAll([
-                    '/',
                     './index.html',
                     '/gloomhaven-assistant-pwa',
                     '/gloomhaven-assistant-pwa/index.html'
