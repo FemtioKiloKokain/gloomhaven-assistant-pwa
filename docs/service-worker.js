@@ -1,4 +1,4 @@
-importScripts("/gloomhaven-assistant-pwa/precache-manifest.b9b987a6a91f6b4860e9d72394b78779.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
+importScripts("/gloomhaven-assistant-pwa/precache-manifest.75005efd4cdd42f4973862c1f0dc5404.js", "https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 self.addEventListener('install', e => {
     e.waitUntil(

@@ -127,8 +127,8 @@ body {
         justify-content: space-around;
         width: 100%;
         font-style: italic;        
-        background: #f2f2f2;
-        border-top: 1px solid #fff;
+        background: #000;
+        border-top: 1px solid #f2f2f2;
         z-index: 1;
         box-shadow: 0 0 3vw #333;
 
@@ -137,7 +137,7 @@ body {
             padding: 0em .2em;
             display: flex;
             align-items: center;
-            color: #333;
+            color: #f2f2f2;
             text-decoration: none;
             flex: 1 1 auto;
             justify-content: center;

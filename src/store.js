@@ -19,7 +19,7 @@ const vuexPersist = new VuexPersist({
 
 const baseDeck = amBase
 baseDeck.forEach(card => {
-    card.inModifierDeck = false
+    card.inModifierDeck = true
 })
 
 const additionalDeck = amAdditional
