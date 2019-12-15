@@ -3,9 +3,6 @@ import Router from 'vue-router'
 
 import AttackModifierView from './views/AttackModifierView.vue'
 import DeckView from './views/DeckView.vue'
-import ProfileView from './views/ProfileView.vue'
-
-import store from '@/store'
 
 Vue.use(Router)
 
@@ -22,11 +19,6 @@ const router = new Router({
             path: '/deck',
             name: 'Deck',
             component: DeckView
-        },
-        {
-            path: '/profile',
-            name: 'Profile',
-            component: ProfileView
         },
         {
             path: '/index.html',
