@@ -1,5 +1,5 @@
 module.exports = {
-    publicPath: 'gloomhaven-assistant-pwa',
+    // publicPath: 'gloomhaven-assistant-pwa',
     outputDir: 'docs',
     pwa: {
         name: 'My App',
