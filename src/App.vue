@@ -12,7 +12,6 @@
 
         <nav>
             <a href="#attack" v-html="require('@/assets/general-icons/attack.svg')"></a>
-            test
             <a href="#deck" v-html="require('@/assets/general-icons/deck.svg')"></a>
         </nav>
     </section>
