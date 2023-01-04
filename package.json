@@ -20,7 +20,7 @@
     "node-sass": "^4.12.0",
     "register-service-worker": "^1.6.2",
     "socket.io-client": "^2.2.0",
-    "svg-inline-loader": "^0.8.0",
+    "svg-inline-loader": "^0.8.2",
     "vue": "^2.6.10",
     "vue-pose": "^0.5.1",
     "vue-router": "^3.0.3",
@@ -29,10 +29,10 @@
     "vuex-persist": "^2.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.5",
+    "@vue/cli-plugin-babel": "^3.10.0",
     "@vue/cli-plugin-eslint": "^3.0.5",
     "@vue/cli-plugin-pwa": "^3.0.5",
-    "@vue/cli-service": "^3.0.5",
+    "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
